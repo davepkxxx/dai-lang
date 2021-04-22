@@ -1,6 +1,6 @@
 package dai.compiler.syntax;
 
-public class VariableDeclarator extends Region {
+public class VariableDeclarator extends Element {
 
     private Identifier id;
 

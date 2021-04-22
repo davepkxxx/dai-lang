@@ -3,7 +3,7 @@ package dai.compiler.syntax;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Program extends Element {
+public class BlockStatement extends Statement {
 
     private List<Statement> body = new ArrayList<>();
 
