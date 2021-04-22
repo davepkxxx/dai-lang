@@ -2,11 +2,11 @@ package dai.compiler.syntax;
 
 public class AssignmentExpression extends Expression {
 
-    Identifier left;
+    private Identifier left;
 
-    Expression right;
+    private Expression right;
 
-    AssignmentOperator operator;
+    private AssignmentOperator operator;
 
     public Identifier getLeft() {
         return left;

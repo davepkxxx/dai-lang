@@ -8,6 +8,8 @@ public class ForStatement {
 
     private Expression update;
 
+    private Statement body;
+
     public Statement getInit() {
         return init;
     }
@@ -30,6 +32,14 @@ public class ForStatement {
 
     public void setUpdate(Expression update) {
         this.update = update;
+    }
+
+    public Statement getBody() {
+        return body;
+    }
+
+    public void setBody(Statement body) {
+        this.body = body;
     }
 
 }
