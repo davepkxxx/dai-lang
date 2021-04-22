@@ -3,7 +3,7 @@ package dai.compiler.syntax;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FunctionDeclaration extends Declaration {
+public class FunctionDeclaration extends Statement implements Declaration {
 
     private Identifier id;
 

@@ -3,7 +3,7 @@ package dai.compiler.syntax;
 import java.util.ArrayList;
 import java.util.List;
 
-public class VariableDeclaration extends Declaration {
+public class VariableDeclaration extends Statement implements Declaration {
 
     List<VariableDeclarator> declarators = new ArrayList<>();
 
