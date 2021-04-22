@@ -1,6 +1,6 @@
 package dai.compiler.syntax;
 
-public class VariableDeclarator extends Element {
+public class VariableDeclarator extends SyntaxTreeNode {
 
     private Identifier id;
 

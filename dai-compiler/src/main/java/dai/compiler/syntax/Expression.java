@@ -1,4 +1,4 @@
 package dai.compiler.syntax;
 
-public abstract class Expression extends Element {
+public abstract class Expression extends SyntaxTreeNode {
 }

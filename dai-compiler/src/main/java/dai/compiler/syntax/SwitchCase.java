@@ -3,7 +3,7 @@ package dai.compiler.syntax;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SwitchCase extends Element {
+public class SwitchCase extends SyntaxTreeNode {
 
     private Expression test;
 

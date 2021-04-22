@@ -3,7 +3,7 @@ package dai.compiler.syntax;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ClassBody extends Element {
+public class ClassBody extends SyntaxTreeNode {
 
     private List<ClassMemberDeclaration> body = new ArrayList<>();
 
