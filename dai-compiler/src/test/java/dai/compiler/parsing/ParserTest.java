@@ -9,7 +9,7 @@ class ParserTest {
     @Test
     void parse() {
         try {
-            Program program = new Parser("VAR id =1,name;").parse();
+            Program program = new Parser("VAR id =1.0f;VAR name = 1l;").parse();
             ObjectMapper mapper = new ObjectMapper();
             String json = mapper.writeValueAsString(program);
             System.out.println(json);
@@ -17,4 +17,5 @@ class ParserTest {
             e.printStackTrace();
         }
     }
+
 }

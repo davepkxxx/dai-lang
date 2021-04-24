@@ -92,6 +92,9 @@ public class Parser extends Scanner {
     private Expression expression() {
         switch (this.nextToken()) {
             case INT:
+            case LONG:
+            case DOUBLE:
+            case FLOAT:
                 return literal();
             default:
                 throw newTokenParsingException("Unexpected token");
@@ -99,12 +102,27 @@ public class Parser extends Scanner {
     }
 
     private Literal literal() {
+        Literal literal;
         switch (this.getToken()) {
             case INT:
-                return new IntLiteral(this.getRaw());
+                literal = new IntLiteral(this.getRaw());
+                break;
+            case LONG:
+                literal = new LongLiteral(this.getRaw());
+                break;
+            case DOUBLE:
+                literal = new DoubleLiteral(this.getRaw());
+                break;
+            case FLOAT:
+                literal = new FloatLiteral(this.getRaw());
+                break;
             default:
                 throw newTokenParsingException("Unexpected token");
         }
+
+        literal.setPos(this.newTokenPos());
+        this.setEndPos(literal);
+        return literal;
     }
 
 }

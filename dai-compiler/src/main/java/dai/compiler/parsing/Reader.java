@@ -18,6 +18,8 @@ public abstract class Reader {
 
     private int column;
 
+    private char prevChar;
+
     private char currChar;
 
     @Nullable
@@ -45,11 +47,16 @@ public abstract class Reader {
         return column;
     }
 
+    public char getPrevChar() {
+        return prevChar;
+    }
+
     protected char getCurrChar() {
         return currChar;
     }
 
     private void refreshCurrChar() {
+        this.prevChar = this.currChar;
         this.currChar = this.offset < this.length ? this.code.charAt(this.offset) : '\u0000';
     }
 

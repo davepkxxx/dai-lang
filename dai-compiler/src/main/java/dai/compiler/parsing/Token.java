@@ -7,8 +7,11 @@ public enum Token {
     EOF, // end of file
     IDENTIFIER,
 
-    // iterals,
+    // literals,
     INT,
+    LONG,
+    DOUBLE,
+    FLOAT,
 
     // keywords
     VAR,
@@ -16,6 +19,6 @@ public enum Token {
     // symbols
     EQUALS,
     COMMA,
-    SEMI;
+    SEMI
 
 }

@@ -22,8 +22,8 @@ public class Scanner extends Reader {
     @NotNull
     private final StringBuilder buffer = new StringBuilder();
 
-    @Nullable
-    private String raw;
+    @NotNull
+    private String raw = "";
 
     @Nullable
     private Scanner prev;
@@ -39,8 +39,16 @@ public class Scanner extends Reader {
         return token;
     }
 
-    protected String getRaw() {
+    private void appendChar() {
+        this.buffer.append(this.getCurrChar());
+    }
+
+    protected @NotNull String getRaw() {
         return raw;
+    }
+
+    private void finishRaw() {
+        this.raw = this.buffer.toString();
     }
 
     protected @Nullable Scanner getPrev() {
@@ -115,7 +123,7 @@ public class Scanner extends Reader {
         this.refreshTokenOffset();
         char c = this.getCurrChar();
         this.buffer.setLength(0);
-        this.buffer.append(c);
+        this.appendChar();
 
         switch (c) {
             case '\u0000':
@@ -132,17 +140,14 @@ public class Scanner extends Reader {
                 break;
             case ',':
                 this.token = Token.COMMA;
-                this.buffer.append(c);
                 this.nextChar();
                 break;
             case ';':
                 this.token = Token.SEMI;
-                this.buffer.append(c);
                 this.nextChar();
                 break;
             case '=':
                 this.token = Token.EQUALS;
-                this.buffer.append(c);
                 this.nextChar();
                 break;
             default:
@@ -169,13 +174,13 @@ public class Scanner extends Reader {
                 || (c >= 'a' && c <= 'z')
                 || (c >= 'A' && c <= 'Z')
                 || (c >= '0' && c <= '9')) {
-            this.buffer.append(c);
+            this.appendChar();
             this.nextChar();
             this.getIdentRest();
         } else {
-            this.raw = this.buffer.toString();
-            if (Keyword.matchRules(raw)) {
-                Optional<Keyword> opt = Keyword.find(raw);
+            this.finishRaw();
+            if (Keyword.matchRules(this.raw)) {
+                Optional<Keyword> opt = Keyword.find(this.raw);
                 if (opt.isPresent()) {
                     this.token = opt.get().getToken();
                 } else {
@@ -186,13 +191,42 @@ public class Scanner extends Reader {
     }
 
     private void getNumber() {
-        char c = this.getCurrChar();
-        if (c > '0' && c < '9') {
-            this.buffer.append(c);
-            this.nextChar();
-            this.getNumber();
-        } else {
-            this.raw = this.buffer.toString();
+        char prev = this.getPrevChar();
+        char curr = this.getCurrChar();
+        Token token = this.getToken();
+
+        switch (curr) {
+            case '.':
+                if (token == Token.DOUBLE) throw newParsingException("Unexpected token");
+                this.token = Token.DOUBLE;
+                this.appendChar();
+                this.nextChar();
+                this.getNumber();
+                break;
+            case 'f':
+                if (prev > '9' || prev < '0') throw newParsingException("Unexpected token");
+                this.token = Token.FLOAT;
+                this.appendChar();
+                this.finishRaw();
+                this.nextChar();
+                break;
+            case 'l':
+                if (token == Token.DOUBLE) throw newParsingException("Unexpected token");
+                this.token = Token.LONG;
+                this.appendChar();
+                this.finishRaw();
+                this.nextChar();
+                break;
+            default:
+                if (curr >= '0' && curr <= '9') {
+                    this.appendChar();
+                    this.nextChar();
+                    this.getNumber();
+                } else if (prev > '9' || prev < '0') {
+                    throw newParsingException("Unexpected token");
+                } else {
+                    this.finishRaw();
+                }
         }
     }
 
