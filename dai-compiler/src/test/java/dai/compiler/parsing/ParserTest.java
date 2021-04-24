@@ -9,7 +9,7 @@ class ParserTest {
     @Test
     void parse() {
         try {
-            Program program = new Parser("VAR id,name;").parse();
+            Program program = new Parser("VAR id =1,name;").parse();
             ObjectMapper mapper = new ObjectMapper();
             String json = mapper.writeValueAsString(program);
             System.out.println(json);

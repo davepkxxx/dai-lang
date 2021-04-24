@@ -23,7 +23,7 @@ public class Scanner extends Reader {
     private final StringBuilder buffer = new StringBuilder();
 
     @Nullable
-    private String name;
+    private String raw;
 
     @Nullable
     private Scanner prev;
@@ -39,8 +39,8 @@ public class Scanner extends Reader {
         return token;
     }
 
-    protected String getName() {
-        return name;
+    protected String getRaw() {
+        return raw;
     }
 
     protected @Nullable Scanner getPrev() {
@@ -84,7 +84,7 @@ public class Scanner extends Reader {
         this.tokenOffset = from.tokenOffset;
         this.tokenLine = from.tokenLine;
         this.tokenColumn = from.tokenColumn;
-        this.name = from.name;
+        this.raw = from.raw;
         super.copyFrom(from);
     }
 
@@ -93,7 +93,7 @@ public class Scanner extends Reader {
         to.tokenOffset = this.tokenOffset;
         to.tokenLine = this.tokenLine;
         to.tokenColumn = this.tokenColumn;
-        to.name = this.name;
+        to.raw = this.raw;
         super.copyTo(to);
     }
 
@@ -146,7 +146,11 @@ public class Scanner extends Reader {
                 this.nextChar();
                 break;
             default:
-                if (c == '_' || c == '$'
+                if (c > '0' && c < '9') {
+                    this.token = Token.INT;
+                    this.nextChar();
+                    this.getNumber();
+                } else if (c == '_' || c == '$'
                         || (c >= 'a' && c <= 'z')
                         || (c >= 'A' && c <= 'Z')) {
                     this.token = Token.IDENTIFIER;
@@ -169,15 +173,26 @@ public class Scanner extends Reader {
             this.nextChar();
             this.getIdentRest();
         } else {
-            this.name = this.buffer.toString();
-            if (Keyword.matchRules(name)) {
-                Optional<Keyword> opt = Keyword.find(name);
+            this.raw = this.buffer.toString();
+            if (Keyword.matchRules(raw)) {
+                Optional<Keyword> opt = Keyword.find(raw);
                 if (opt.isPresent()) {
                     this.token = opt.get().getToken();
                 } else {
-                    throw newTokenParsingException(String.format("Unknown keyword \"%s\"", this.name));
+                    throw newTokenParsingException(String.format("Unknown keyword \"%s\"", this.raw));
                 }
             }
+        }
+    }
+
+    private void getNumber() {
+        char c = this.getCurrChar();
+        if (c > '0' && c < '9') {
+            this.buffer.append(c);
+            this.nextChar();
+            this.getNumber();
+        } else {
+            this.raw = this.buffer.toString();
         }
     }
 

@@ -5,9 +5,14 @@ public enum Token {
     // special tokens
     EMPTY,
     EOF, // end of file
-    IDENTIFIER, // id
+    IDENTIFIER,
+
+    // iterals,
+    INT,
+
     // keywords
     VAR,
+
     // symbols
     EQUALS,
     COMMA,

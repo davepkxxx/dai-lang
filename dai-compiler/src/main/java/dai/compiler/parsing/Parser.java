@@ -4,7 +4,6 @@ import dai.compiler.syntax.*;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.function.Predicate;
 
 public class Parser extends Scanner {
@@ -65,8 +64,14 @@ public class Parser extends Scanner {
 
     private VariableDeclarator variableDeclarator() {
         VariableDeclarator stmt = new VariableDeclarator();
+        stmt.setPos(this.getNext().newTokenPos());
         stmt.setId(this.identifier());
-        stmt.setPos(stmt.getId().getPos());
+
+        if (this.getNext().getToken() == Token.EQUALS) {
+            this.nextToken();
+            stmt.setInit(this.expression());
+        }
+
         this.setEndPos(stmt);
         return stmt;
     }
@@ -76,11 +81,29 @@ public class Parser extends Scanner {
 
         if (this.nextToken() == Token.IDENTIFIER) {
             id.setPos(this.newTokenPos());
-            id.setName(this.getName());
+            id.setName(this.getRaw());
             this.setEndPos(id);
             return id;
         } else {
             throw newTokenParsingException("Unexpected token");
+        }
+    }
+
+    private Expression expression() {
+        switch (this.nextToken()) {
+            case INT:
+                return literal();
+            default:
+                throw newTokenParsingException("Unexpected token");
+        }
+    }
+
+    private Literal literal() {
+        switch (this.getToken()) {
+            case INT:
+                return new IntLiteral(this.getRaw());
+            default:
+                throw newTokenParsingException("Unexpected token");
         }
     }
 

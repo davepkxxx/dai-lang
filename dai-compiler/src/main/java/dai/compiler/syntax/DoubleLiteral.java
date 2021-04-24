@@ -1,15 +1,12 @@
 package dai.compiler.syntax;
 
-public class DoubleLiteral extends Literal {
+public class DoubleLiteral extends BasicLiteral {
 
-    private Double value;
-
-    public Double getValue() {
-        return value;
+    public DoubleLiteral() {
     }
 
-    public void setValue(Double value) {
-        this.value = value;
+    public DoubleLiteral(String raw) {
+        super(raw);
     }
-
+    
 }
