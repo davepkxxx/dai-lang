@@ -1,100 +1,87 @@
 package dai.compiler.parsing;
 
-import dai.compiler.syntax.BlockStatement;
-import dai.compiler.syntax.SyntaxTreeNodePosition;
-import dai.compiler.syntax.Program;
-import dai.compiler.syntax.Statement;
+import dai.compiler.syntax.*;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.function.BooleanSupplier;
 import java.util.function.Predicate;
 
-public class Parser {
-
-    private final String code;
-
-    private final int length;
-
-    private final ParsingCodePosition position;
-
-    private final ParsingCodeStream stream;
+public class Parser extends Scanner {
 
     public Parser(String code) {
-        this.code = code;
-        this.length = code.length();
-        this.position = new ParsingCodePosition(this.length);
-        this.stream = new ParsingCodeStream(code, this.position);
+        super(code);
+        this.init();
     }
 
     public Program parse() {
         Program program = new Program();
-        program.setBody(this.parseStatements(c -> true));
-        this.position.setEndPosition(program);
+        program.setPos(this.newPos());
+        program.setBody(this.statements(c -> true));
+        this.setEndPos(program);
         return program;
     }
 
-    private Optional<Statement> parseStatement() {
-        Statement stmt = null;
-        char curr = this.getCurrentCharacter();
-
-        if (curr == '{') {
-            stmt = this.parseBlockStatement();
-        }
-
-        return Optional.ofNullable(stmt);
-    }
-
-    private List<Statement> parseStatements(Predicate<Character> predicate) {
+    private List<Statement> statements(Predicate<Character> predicate) {
         List<Statement> list = new ArrayList<>();
 
-        this.stream.every(c -> {
-            this.skipWhiteSpace(';');
-
-            if (this.position.hasNext()) {
-                this.parseStatement().ifPresent(stmt -> {
-                    list.add(stmt);
-                });
-            }
-
-            this.skipWhiteSpace(';');
-            return predicate.test(c);
-        });
+        for (Token token = this.nextToken(); token != Token.EOF; token = this.nextToken()) {
+            if (token == Token.SEMI) continue;
+            list.add(statement());
+        }
 
         return list;
     }
 
-    private BlockStatement parseBlockStatement() {
-        BlockStatement block = new BlockStatement();
-        this.position.setStartPosition(block);
-        this.position.next();
-        block.setBody(this.parseStatements(c -> c != '}'));
-        this.position.next();
-        return block;
+    private Statement statement() {
+        switch (this.getToken()) {
+            case VAR:
+                return variableDeclaration();
+        }
+
+        throw newTokenParsingException("Unexpected token");
     }
 
-    private char getCurrentCharacter() {
-        return code.charAt(this.position.getOffset());
+    private Statement variableDeclaration() {
+        VariableDeclaration stmt = new VariableDeclaration();
+        stmt.setPos(this.newTokenPos());
+        stmt.setKind(VariableDeclarationKind.VAR);
+        stmt.setDeclarators(new ArrayList<>());
+
+        do {
+            stmt.getDeclarators().add(variableDeclarator());
+        } while (this.nextToken() == Token.COMMA);
+
+        switch (this.getToken()) {
+            case SEMI:
+                this.setEndPos(stmt);
+                return stmt;
+            case EOF:
+                throw newTokenParsingException("reached end of file while parsing");
+            default:
+                throw newTokenParsingException("';' expected");
+        }
     }
 
-    private void skipWhiteSpace(char... others) {
-        this.stream.every(c -> {
-            switch (c) {
-                case '\n': // enter
-                case '\r': // carriage return
-                    this.position.nextLine();
-                case ' ': // space
-                case '\t': // tab
-                case '\f': // form feed
-                    return true;
-                default:
-                    for (char o : others)
-                        if (o == c)
-                            return true;
-                    return false;
-            }
-        });
+    private VariableDeclarator variableDeclarator() {
+        VariableDeclarator stmt = new VariableDeclarator();
+        stmt.setId(this.identifier());
+        stmt.setPos(stmt.getId().getPos());
+        this.setEndPos(stmt);
+        return stmt;
+    }
+
+    private Identifier identifier() {
+        Identifier id = new Identifier();
+
+        if (this.nextToken() == Token.IDENTIFIER) {
+            id.setPos(this.newTokenPos());
+            id.setName(this.getName());
+            this.setEndPos(id);
+            return id;
+        } else {
+            throw newTokenParsingException("Unexpected token");
+        }
     }
 
 }

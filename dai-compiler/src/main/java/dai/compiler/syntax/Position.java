@@ -1,6 +1,6 @@
 package dai.compiler.syntax;
 
-public class SyntaxTreeNodePosition {
+public class Position {
 
     private int startOffset;
 
