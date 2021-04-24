@@ -1,4 +1,4 @@
 package dai.compiler.syntax;
 
-public abstract class Statement extends SyntaxTreeNode {
+public abstract class Statement extends TreeNode {
 }

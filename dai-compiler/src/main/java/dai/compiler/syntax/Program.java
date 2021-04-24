@@ -2,7 +2,7 @@ package dai.compiler.syntax;
 
 import java.util.List;
 
-public class Program extends SyntaxTreeNode {
+public class Program extends TreeNode {
 
     private List<Statement> body;
 
