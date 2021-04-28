@@ -29,6 +29,12 @@ public interface DaiParserVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitImportDeclaration(DaiParser.ImportDeclarationContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link DaiParser#body}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitBody(DaiParser.BodyContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link DaiParser#statement}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
@@ -40,6 +46,12 @@ public interface DaiParserVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitBlock(DaiParser.BlockContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link DaiParser#blockStatements}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitBlockStatements(DaiParser.BlockStatementsContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link DaiParser#emptyStatement}.
 	 * @param ctx the parse tree
@@ -88,6 +100,12 @@ public interface DaiParserVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitFunctionParameters(DaiParser.FunctionParametersContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link DaiParser#functionReturn}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitFunctionReturn(DaiParser.FunctionReturnContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link DaiParser#returnStatement}.
 	 * @param ctx the parse tree
@@ -524,11 +542,17 @@ public interface DaiParserVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitObjectPropertyList(DaiParser.ObjectPropertyListContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link DaiParser#qualifiedName}.
+	 * Visit a parse tree produced by {@link DaiParser#identifier}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitQualifiedName(DaiParser.QualifiedNameContext ctx);
+	T visitIdentifier(DaiParser.IdentifierContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link DaiParser#identifierPath}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitIdentifierPath(DaiParser.IdentifierPathContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link DaiParser#genericsParameter}.
 	 * @param ctx the parse tree
@@ -554,23 +578,35 @@ public interface DaiParserVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitClassType(DaiParser.ClassTypeContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link DaiParser#abstractGenericsParameter}.
+	 * Visit a parse tree produced by {@link DaiParser#declareGenericsParameter}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitAbstractGenericsParameter(DaiParser.AbstractGenericsParameterContext ctx);
+	T visitDeclareGenericsParameter(DaiParser.DeclareGenericsParameterContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link DaiParser#abstractGenericsParameterList}.
+	 * Visit a parse tree produced by {@link DaiParser#declareGenericsParameterList}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitAbstractGenericsParameterList(DaiParser.AbstractGenericsParameterListContext ctx);
+	T visitDeclareGenericsParameterList(DaiParser.DeclareGenericsParameterListContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link DaiParser#abstractGenericsParameters}.
+	 * Visit a parse tree produced by {@link DaiParser#declareGenericsParameters}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitAbstractGenericsParameters(DaiParser.AbstractGenericsParametersContext ctx);
+	T visitDeclareGenericsParameters(DaiParser.DeclareGenericsParametersContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link DaiParser#declareGenericsParameterExtends}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitDeclareGenericsParameterExtends(DaiParser.DeclareGenericsParameterExtendsContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link DaiParser#declareGenericsParameterSuper}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitDeclareGenericsParameterSuper(DaiParser.DeclareGenericsParameterSuperContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link DaiParser#eos}.
 	 * @param ctx the parse tree

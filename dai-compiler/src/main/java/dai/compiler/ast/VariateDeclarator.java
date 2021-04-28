@@ -1,34 +1,19 @@
 package dai.compiler.ast;
 
+import lombok.Getter;
+import lombok.Setter;
+
 public class VariateDeclarator extends AstNode {
 
+    @Getter
+    @Setter
     private String name;
 
+    @Getter
+    @Setter
     private ClassType type;
 
+    @Getter
+    @Setter
     private Expression init;
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public ClassType getType() {
-        return type;
-    }
-
-    public void setType(ClassType type) {
-        this.type = type;
-    }
-
-    public Expression getInit() {
-        return init;
-    }
-
-    public void setInit(Expression init) {
-        this.init = init;
-    }
 }

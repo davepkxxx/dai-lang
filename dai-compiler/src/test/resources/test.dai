@@ -1,0 +1,2 @@
+PACKAGE dai.util
+VAR a=1,j:dai.Int;

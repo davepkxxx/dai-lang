@@ -2,13 +2,15 @@ parser grammar DaiParser;
 
 options { tokenVocab=DaiLexer; }
 
-compilationUnit: packageDeclaration? importDeclaration* statement* EOF;
-packageDeclaration: PACKAGE qualifiedName eos;
-importDeclaration: IMPORT qualifiedName eos;
+compilationUnit: packageDeclaration? importDeclaration* body EOF;
+packageDeclaration: PACKAGE identifierPath eos;
+importDeclaration: IMPORT identifierPath eos;
+
+body: statement*;
 
 statement
     : emptyStatement
-    | block
+    | blockStatements
     | variateDeclaration eos
     | functionDeclaration
     | returnStatement
@@ -32,39 +34,41 @@ statement
     ;
 
 block:              '{' statement* '}';
+blockStatements:    '{' statement* '}';
 emptyStatement:     ';';
 continueStatement:  CONTINUE eos;
 breakStatement:     BREAK eos;
 
 variateDeclaration:     (VAR | CONST) variateDeclaratorList;
 variateDeclaratorList:  variateDeclarator (',' variateDeclarator)*;
-variateDeclarator:      IDENTIFIER (':' classType)? ('=' expression)?;
+variateDeclarator:      identifier (':' classType)? ('=' expression)?;
 
-functionDeclaration:    FUNC IDENTIFIER abstractGenericsParameters? functionParameters block;
+functionDeclaration:    FUNC identifier declareGenericsParameters? functionParameters functionReturn? block;
 functionParameters:     '(' variateDeclaratorList? ')';
+functionReturn:         ':' (classType | VOID);
 returnStatement:        RETURN expression? eos;
 
-enumDeclaration:            ENUM IDENTIFIER ('<' genericsParameter '>')? enumBody;
+enumDeclaration:            ENUM identifier ('<' genericsParameter '>')? enumBody;
 enumBody:                   '{' enumFieldDeclaratorList '}';
-enumFieldDeclarator:        IDENTIFIER ('=' expression)?;
+enumFieldDeclarator:        identifier ('=' expression)?;
 enumFieldDeclaratorList:    enumFieldDeclarator (',' enumFieldDeclarator)*;
 
-structDeclaration:  STRUCT IDENTIFIER abstractGenericsParameters? extendsSnippet? structBody;
+structDeclaration:  STRUCT identifier declareGenericsParameters? extendsSnippet? structBody;
 structBody:         '{' variateDeclaration* '}';
 extendsSnippet:     (EXTENDS classType);
 
-classDeclaration:       CLASS IDENTIFIER abstractGenericsParameters? extendsSnippet? implementsSnippet? classBody;
+classDeclaration:       CLASS identifier declareGenericsParameters? extendsSnippet? implementsSnippet? classBody;
 classBody:              '{' classMemberDeclaration* '}';
 classMemberDeclaration: variateDeclaration | functionDeclaration | constructorDeclaration;
 constructorDeclaration: CONSTRUCTOR functionParameters block;
 implementsSnippet:      IMPLEMENTS classType (',' classType)*;
 
-interfaceDeclaration:           INTERFACE IDENTIFIER abstractGenericsParameters? extendsSnippet? interfaceBody;
+interfaceDeclaration:           INTERFACE identifier declareGenericsParameters? extendsSnippet? interfaceBody;
 interfaceBody:                  '{' interfaceMemberDeclaration* '}';
 interfaceMemberDeclaration:     variateDeclaration | functionDeclaration | abstractFunctionDeclaration;
-abstractFunctionDeclaration:    FUNC IDENTIFIER genericsParameters? functionParameters eos;
+abstractFunctionDeclaration:    FUNC identifier genericsParameters? functionParameters eos;
 
-annotationDeclaration:  ANNOTATION IDENTIFIER annotationBody;
+annotationDeclaration:  ANNOTATION identifier annotationBody;
 annotationBody:         '{' variateDeclaration* '}';
 
 throwStatement: THROW expression eos;
@@ -83,7 +87,7 @@ switchCaseLabel:        CASE expression ':' | DEFAULT ':';
 
 loopStatement:      LOOP statement;
 whileStatement:     WHILE condition statement;
-doWhileStatement:   DO statement WHILE condition;
+doWhileStatement:   DO statement WHILE condition eos;
 
 forStatement:   FOR '(' forInit? ';' expression? ';' expressionList? ')' statement;
 forInit:        variateDeclaration | expressionList;
@@ -95,8 +99,8 @@ expression
     : '(' expression ')'                                            # parenthesizedExpression
     | THIS                                                          # thisExpression
     | SUPER                                                         # superExpression
-    | IDENTIFIER                                                    # identifierExpression
-    | expression '.' (IDENTIFIER | expression params)               # chainExpression
+    | identifier                                                    # identifierExpression
+    | expression '.' (identifier | expression params)               # chainExpression
     | expression '[' expression ']'                                 # memberExpression
     | expression params                                             # callExpression
     | NEW genericsParameters? params                                # newExpression
@@ -105,7 +109,7 @@ expression
     | ('~' | '!') expression                                        # notExpression
     | expression ('*' | '/' | '%') expression                       # multiplicativeExpression
     | expression ('+' | '-') expression                             # additiveExpression
-    | expression ('<<' | '>>') expression                           # shiftExpression
+    | expression ('<' '<' | '>' '>') expression                     # shiftExpression
     | expression ('>' | '<' | '>=' | '<=') expression               # relationalExpression
     | expression ('=' | '!=') expression                            # equalExpression
     | expression '&' expression                                     # bitwiseAndExpression
@@ -114,8 +118,8 @@ expression
     | expression '&&' expression                                    # andExpression
     | expression '||' expression                                    # orExpression
     | <assoc=right> expression '?' expression ':' expression        # conditionalExpression
-    | <assoc=right> qualifiedName assignOperator expression         # assignExpression
-    | (IDENTIFIER | functionParameters) ARROW (expression | block)  # lambdaExpression
+    | <assoc=right> identifierPath assignOperator expression         # assignExpression
+    | (identifier | functionParameters) ARROW (expression | block)  # lambdaExpression
     | literal                                                       # literalExpression
     | arrayLiteral                                                  # arrayLiteralExpression
     | objectLiteral                                                 # objectLiteralExpression
@@ -152,21 +156,20 @@ literal
 
 arrayLiteral:       '[' expressionList? ']';
 objectLiteral:      '{' objectPropertyList? '}';
-objectProperty:     IDENTIFIER ':' expression;
+objectProperty:     identifier ':' expression;
 objectPropertyList: objectProperty (',' objectProperty)?;
 
-qualifiedName:                  IDENTIFIER ('.' IDENTIFIER)*;
-genericsParameter:              IDENTIFIER | qualifiedName;
-genericsParameterList:          genericsParameter (',' genericsParameter)?;
-genericsParameters:             '<' genericsParameterList '>';
-classType:                      qualifiedName genericsParameters?;
-abstractGenericsParameter:      IDENTIFIER (EXTENDS qualifiedName)? | qualifiedName;
-abstractGenericsParameterList:  abstractGenericsParameter (',' abstractGenericsParameter)?;
-abstractGenericsParameters:     '<' abstractGenericsParameterList '>';
+identifier:     IDENTIFIER;
+identifierPath: identifier ('.' identifier)*;
 
-eos
-    : ';'
-    | EOF
-    | '\n'
-    | '\r' '\n'?
-    ;
+genericsParameter:                  identifierPath genericsParameters?;
+genericsParameterList:              genericsParameter (',' genericsParameter)?;
+genericsParameters:                 '<' genericsParameterList '>';
+classType:                          identifierPath genericsParameters?;
+declareGenericsParameter:          identifier declareGenericsParameterExtends?;
+declareGenericsParameterList:      declareGenericsParameter (',' declareGenericsParameter)?;
+declareGenericsParameters:         '<' declareGenericsParameterList '>';
+declareGenericsParameterExtends:   EXTENDS (identifier | declareGenericsParameterSuper);
+declareGenericsParameterSuper:     identifierPath genericsParameters?;
+
+eos: NL+ | NL* SEMI NL* | EOF;

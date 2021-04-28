@@ -81,8 +81,8 @@ BITWISE_AND:            '&';
 BITWISE_OR:             '|';
 EXCLUSIVE_OR:           '^';
 REMAINDER:              '%';
-LEFT_SHIFT:             '<<';
-RIGHT_SHIFT:            '>>';
+//LEFT_SHIFT:             '<<';
+//RIGHT_SHIFT:            '>>';
 
 // assignments
 ASSIGNMENT:                 '=';
@@ -109,7 +109,8 @@ LEFT_BRACK:     '[';
 RIGHT_BRACK:    ']';
 
 // whitespace
-WS: [ \t\r\n\u000C]+ -> channel(HIDDEN);
+WS: [\u0020\u0009\u000C] -> skip;
+NL: '\u000A' | '\u000D' '\u000A';
 
 // comments
 COMMENT:        '/*' .*? '*/'    -> channel(HIDDEN);
@@ -122,9 +123,6 @@ SEMI:       ';';
 COLON:      ':';
 AT:         '@';
 ELLIPSIS:   '...';
-
-LF: '\n';
-CR: '\r';
 
 // id
 IDENTIFIER: Letter LetterOrDigit*;
