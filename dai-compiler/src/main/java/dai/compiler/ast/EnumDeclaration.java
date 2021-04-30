@@ -6,9 +6,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Data
-public class VariateDeclarator implements AstNode {
+public class EnumDeclaration implements Statement {
     private String name;
-    private ClassTypeNode type;
-    private Expression init;
     private List<AnnotatedNode> annotations = new ArrayList<>();
+    private ClassTypeNode genericsParameter;
+    private List<VariateDeclarator> fields = new ArrayList<>();
 }

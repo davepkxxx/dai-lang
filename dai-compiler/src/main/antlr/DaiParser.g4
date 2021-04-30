@@ -2,132 +2,139 @@ parser grammar DaiParser;
 
 options { tokenVocab=DaiLexer; }
 
-compilationUnit: packageDeclaration? importDeclaration* body EOF;
-packageDeclaration: PACKAGE identifierPath eos;
-importDeclaration: IMPORT identifierPath eos;
-
-body: statement*;
+compilationUnit:    packageDeclaration? importDeclaration* statement* EOF;
+packageDeclaration: annotated* PACKAGE identifierPath eos;
+importDeclaration:  IMPORT identifierPath eos;
 
 statement
     : emptyStatement
-    | blockStatements
-    | variateDeclaration eos
+    | blockStatement
+    | variateDeclaration
     | functionDeclaration
     | returnStatement
     | enumDeclaration
     | structDeclaration
     | classDeclaration
     | interfaceDeclaration
-//    | annotationDeclaration
+    | annotationDeclaration
     | throwStatement
     | tryStatement
     | ifStatement
     | switchStatement
-    | loopStatement
     | whileStatement
     | doWhileStatement
     | forStatement
-    | foreachStatement
+    | forInStatement
     | continueStatement
     | breakStatement
     | expressionStatement
     ;
 
-block:              '{' statement* '}';
-blockStatements:    '{' statement* '}';
+body:               '{' statement* '}';
+blockStatement:     '{' statement* '}';
 emptyStatement:     ';';
 continueStatement:  CONTINUE eos;
 breakStatement:     BREAK eos;
 
-variateDeclaration:     (VAR | CONST) variateDeclaratorList;
-variateDeclaratorList:  variateDeclarator (',' variateDeclarator)*;
-variateDeclarator:      identifier (':' classType)? ('=' expression)?;
+variateDeclaration: annotated* (VAR | CONST) variateDeclarators eos;
+variateDeclarators: variateDeclarator (',' variateDeclarator)*;
+variateDeclarator:  identifier (':' useType)? ('=' expression)?;
 
-functionDeclaration:    FUNC identifier declareGenericsParameters? functionParameters functionReturn? block;
-functionParameters:     '(' variateDeclaratorList? ')';
-functionReturn:         ':' (classType | VOID);
-returnStatement:        RETURN expression? eos;
+functionDeclaration:                annotated* FUNC identifier declarationTypeParametersBlock? functionParameterDeclaratorsBlock functionReturn? body;
+functionParameterDeclaratorsBlock:  '(' functionParameterDeclarators? ')';
+functionParameterDeclarators:       functionParameterDeclarator (',' functionParameterDeclarator);
+functionParameterDeclarator:        annotated* variateDeclarator;
+functionReturn:             ':' (useType | VOID);
+returnStatement:            RETURN expression? eos;
 
-enumDeclaration:            ENUM identifier ('<' genericsParameter '>')? enumBody;
-enumBody:                   '{' enumFieldDeclaratorList '}';
-enumFieldDeclarator:        identifier ('=' expression)?;
-enumFieldDeclaratorList:    enumFieldDeclarator (',' enumFieldDeclarator)*;
+enumDeclaration:        annotated* ENUM identifier ('<' useTypeParameter '>')? '{' enumBody '}';
+enumBody:               '{' enumFieldDeclarators '}';
+enumFieldDeclarator:    annotated* identifier ('=' expression)?;
+enumFieldDeclarators:   enumFieldDeclarator (',' enumFieldDeclarator)* eos;
 
-structDeclaration:  STRUCT identifier declareGenericsParameters? extendsSnippet? structBody;
+structDeclaration:  annotated* STRUCT identifier declarationTypeParametersBlock? declareExtends? structBody;
 structBody:         '{' variateDeclaration* '}';
-extendsSnippet:     (EXTENDS classType);
+declareExtends:     (EXTENDS useType);
 
-classDeclaration:       CLASS identifier declareGenericsParameters? extendsSnippet? implementsSnippet? classBody;
+classDeclaration:       annotated* CLASS identifier declarationTypeParametersBlock? declareExtends? declareImplements? classBody;
 classBody:              '{' classMemberDeclaration* '}';
 classMemberDeclaration: variateDeclaration | functionDeclaration | constructorDeclaration;
-constructorDeclaration: CONSTRUCTOR functionParameters block;
-implementsSnippet:      IMPLEMENTS classType (',' classType)*;
+constructorDeclaration: annotated* CONSTRUCTOR functionParameterDeclaratorsBlock  body;
+declareImplements:      IMPLEMENTS useTypes;
 
-interfaceDeclaration:           INTERFACE identifier declareGenericsParameters? extendsSnippet? interfaceBody;
+interfaceDeclaration:           annotated* INTERFACE identifier declarationTypeParametersBlock? declareExtends? interfaceBody;
 interfaceBody:                  '{' interfaceMemberDeclaration* '}';
 interfaceMemberDeclaration:     variateDeclaration | functionDeclaration | abstractFunctionDeclaration;
-abstractFunctionDeclaration:    FUNC identifier genericsParameters? functionParameters eos;
+abstractFunctionDeclaration:    annotated* FUNC identifier declarationTypeParametersBlock? functionParameterDeclaratorsBlock functionReturn? eos;
 
-annotationDeclaration:  ANNOTATION identifier annotationBody;
+annotationDeclaration:  annotated* ANNOTATION identifier annotationBody;
 annotationBody:         '{' variateDeclaration* '}';
+annotated:              '@' identifierPath namedParametersBlock?;
 
 throwStatement: THROW expression eos;
 tryStatement
-    : TRY statement FINALLY statement
-    | TRY statement CATCH '(' variateDeclarator ')' statement
-    | TRY statement CATCH '(' variateDeclarator ')' statement FINALLY statement
+    : TRY body finallyBlock
+    | TRY body catchBlock+ finallyBlock?
     ;
+catchBlock:     CATCH '(' variateDeclarator ')' body;
+finallyBlock:   FINALLY body;
 
-ifStatement:    IF condition statement (ELSE statement)?;
+ifStatement:    IF condition statement elseBlock?;
+elseBlock:      ELSE statement;
 condition:      '(' expression ')';
 
-switchStatement:        SWITCH condition '{' switchCaseStatement+ '}';
-switchCaseStatement:    switchCaseLabel+ statement+;
-switchCaseLabel:        CASE expression ':' | DEFAULT ':';
+switchStatement: SWITCH condition '{' switchCaseBlock+ '}';
+switchCaseBlock: switchCaseLabel+ statement+;
+switchCaseLabel: CASE expression ':' | DEFAULT ':';
 
-loopStatement:      LOOP statement;
 whileStatement:     WHILE condition statement;
 doWhileStatement:   DO statement WHILE condition eos;
 
-forStatement:   FOR '(' forInit? ';' expression? ';' expressionList? ')' statement;
-forInit:        variateDeclaration | expressionList;
-foreachStatement
-    : FOREACH '(' variateDeclarator IN expression ')' statement
-    | FOREACH '(' '(' variateDeclarator (',' variateDeclarator)? ')' IN expression ')' statement;
+forStatement:       FOR '(' forInit? ';' expression? ';' expressions? ')' statement;
+forInit:            forInitDeclaration | expressions;
+forInitDeclaration: annotated* (VAR | CONST) variateDeclarators;
+forInStatement:     FOR '(' identifier (',' identifier)? IN expression ')' statement;
 
-expression
-    : '(' expression ')'                                            # parenthesizedExpression
-    | THIS                                                          # thisExpression
-    | SUPER                                                         # superExpression
-    | identifier                                                    # identifierExpression
-    | expression '.' (identifier | expression params)               # chainExpression
-    | expression '[' expression ']'                                 # memberExpression
-    | expression params                                             # callExpression
-    | NEW genericsParameters? params                                # newExpression
-    | expression ('++' | '--')                                      # incrementalExpression
-    | ('+' | '-') expression                                        # unaryExpression
-    | ('~' | '!') expression                                        # notExpression
-    | expression ('*' | '/' | '%') expression                       # multiplicativeExpression
-    | expression ('+' | '-') expression                             # additiveExpression
-    | expression ('<' '<' | '>' '>') expression                     # shiftExpression
-    | expression ('>' | '<' | '>=' | '<=') expression               # relationalExpression
-    | expression ('=' | '!=') expression                            # equalExpression
-    | expression '&' expression                                     # bitwiseAndExpression
-    | expression '^' expression                                     # exclusiveOrExpression
-    | expression '|' expression                                     # bitwiseOrExpression
-    | expression '&&' expression                                    # andExpression
-    | expression '||' expression                                    # orExpression
-    | <assoc=right> expression '?' expression ':' expression        # conditionalExpression
-    | <assoc=right> identifierPath assignOperator expression         # assignExpression
-    | (identifier | functionParameters) ARROW (expression | block)  # lambdaExpression
-    | literal                                                       # literalExpression
-    | arrayLiteral                                                  # arrayLiteralExpression
-    | objectLiteral                                                 # objectLiteralExpression
+expr
+    : '(' expr ')'                                                          # parenthesizedExpression
+    | THIS                                                                  # thisExpression
+    | SUPER                                                                 # superExpression
+    | identifier                                                            # identifierExpression
+    | expr '.' (identifier | expr parametersBlock)                          # chainExpression
+    | expr '[' expr ']'                                                     # memberExpression
+    | expr parametersBlock                                                  # callExpression
+    | NEW annotated* useType parametersBlock                                # newExpression
+    | expr ('++' | '--')                                                    # incrementalExpression
+    | ('+' | '-') expr                                                      # unaryExpression
+    | ('~' | '!') expr                                                      # notExpression
+    | expr ('*' | '/' | '%') expr                                           # multiplicativeExpression
+    | expr ('+' | '-') expr                                                 # additiveExpression
+    | expr ('<' '<' | '>' '>') expr                                         # shiftExpression
+    | expr ('>' | '<' | '>=' | '<=') expr                                   # relationalExpression
+    | expr ('=' | '!=') expr                                                # equalExpression
+    | expr '&' expr                                                         # bitwiseAndExpression
+    | expr '^' expr                                                         # exclusiveOrExpression
+    | expr '|' expr                                                         # bitwiseOrExpression
+    | expr '&&' expr                                                        # andExpression
+    | expr '||' expr                                                        # orExpression
+    | <assoc=right> expr '?' expr ':' expr                                  # conditionalExpression
+    | <assoc=right> identifierPath assignOperator expr                      # assignExpression
+    | (identifier | functionParameterDeclaratorsBlock) ARROW (expr | body)  # lambdaExpression
+    | literal                                                               # literalExpression
+    | arrayLiteral                                                          # arrayLiteralExpression
+    | objectLiteral                                                         # objectLiteralExpression
     ;
 
-expressionList: expression (',' expression)*;
-expressionStatement: expression eos;
-params: '(' expressionList? ')';
+expression:             expr;
+expressions:            expression (',' expression)*;
+expressionStatement:    expression eos;
+
+parameter:              expression | namedParameter;
+parameters:             parameter (',' parameter)*;
+parametersBlock:        '(' parameters? ')';
+namedParameter:         identifier ('=' expression);
+namedParameters:        namedParameter (',' namedParameter)*;
+namedParametersBlock:   '(' namedParameters? ')';
 
 assignOperator
     : '='
@@ -154,22 +161,24 @@ literal
     | NULL_LITERAL
     ;
 
-arrayLiteral:       '[' expressionList? ']';
-objectLiteral:      '{' objectPropertyList? '}';
+arrayLiteral:       '[' expressions? ']';
+objectLiteral:      '{' objectProperties? '}';
 objectProperty:     identifier ':' expression;
-objectPropertyList: objectProperty (',' objectProperty)?;
+objectProperties:   objectProperty (',' objectProperty)?;
 
 identifier:     IDENTIFIER;
 identifierPath: identifier ('.' identifier)*;
 
-genericsParameter:                  identifierPath genericsParameters?;
-genericsParameterList:              genericsParameter (',' genericsParameter)?;
-genericsParameters:                 '<' genericsParameterList '>';
-classType:                          identifierPath genericsParameters?;
-declareGenericsParameter:          identifier declareGenericsParameterExtends?;
-declareGenericsParameterList:      declareGenericsParameter (',' declareGenericsParameter)?;
-declareGenericsParameters:         '<' declareGenericsParameterList '>';
-declareGenericsParameterExtends:   EXTENDS (identifier | declareGenericsParameterSuper);
-declareGenericsParameterSuper:     identifierPath genericsParameters?;
+useType:    identifierPath useTypeParametersBlock?;
+useTypes:   useType (',' useType)*;
+
+useTypeParameter:       useType;
+useTypeParameters:      useTypeParameter (',' useTypeParameter);
+useTypeParametersBlock: '<' useTypeParameters '>';
+
+declarationTypeParameter:           identifier declarationTypeParameterExtends?;
+declarationTypeParameters:          declarationTypeParameter (',' declarationTypeParameter)?;
+declarationTypeParametersBlock:     '<' declarationTypeParameters '>';
+declarationTypeParameterExtends:    EXTENDS useType;
 
 eos: NL+ | NL* SEMI NL* | EOF;

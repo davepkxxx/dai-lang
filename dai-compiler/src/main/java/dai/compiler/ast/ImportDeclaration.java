@@ -1,10 +1,8 @@
 package dai.compiler.ast;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
-public class ImportDeclaration extends Statement {
-    @Getter
-    @Setter
+@Data
+public class ImportDeclaration implements Statement {
     private String name;
 }

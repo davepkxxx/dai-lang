@@ -1,23 +1,25 @@
 package dai.compiler.ast;
 
-import lombok.Getter;
-import lombok.Setter;
+import android.support.annotation.IntDef;
+import lombok.Data;
 
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 import java.util.ArrayList;
 import java.util.List;
 
-public class VariateDeclaration extends Statement {
-
-    @Getter
-    @Setter
-    private Kind kind;
-
-    @Getter
-    @Setter
+@Data
+public class VariateDeclaration implements Statement {
+    @VariateKind
+    private int variateKind;
+    private List<AnnotatedNode> annotations = new ArrayList<>();
     private List<VariateDeclarator> declarators = new ArrayList<>();
 
-    public enum Kind {
-        VAR,
-        CONST;
+    @IntDef({VAR, CONST})
+    @Retention(RetentionPolicy.SOURCE)
+    public @interface VariateKind {
     }
+
+    public static final int VAR = 0;
+    public static final int CONST = 1;
 }

@@ -1,9 +1,7 @@
 package dai.compiler.parsing;
 
 import dai.compiler.antlr.DaiParser.*;
-import dai.compiler.ast.ClassType;
-import dai.compiler.ast.VariateDeclaration;
-import dai.compiler.ast.VariateDeclarator;
+import dai.compiler.ast.*;
 
 import java.util.List;
 
@@ -11,24 +9,30 @@ public interface VariateVisitor extends BaseVisitor {
 
     default VariateDeclaration visitVariateDeclaration(VariateDeclarationContext ctx) {
         VariateDeclaration result = new VariateDeclaration();
-        if (ctx.VAR() != null) result.setKind(VariateDeclaration.Kind.VAR);
-        if (ctx.CONST() != null) result.setKind(VariateDeclaration.Kind.CONST);
-        result.getDeclarators().addAll(this.visitVariateDeclaratorList(ctx.variateDeclaratorList()));
+        this.accept(ctx.annotated(), this::visitAnnotated, result.getAnnotations()::add);
+        if (ctx.VAR() != null) result.setVariateKind(VariateDeclaration.VAR);
+        if (ctx.CONST() != null) result.setVariateKind(VariateDeclaration.CONST);
+        this.accept(ctx.variateDeclarators(), this::visitVariateDeclarators, result::setDeclarators);
         return result;
     }
 
-    default List<VariateDeclarator> visitVariateDeclaratorList(VariateDeclaratorListContext ctx) {
+    default List<VariateDeclarator> visitVariateDeclarators(VariateDeclaratorsContext ctx) {
         return map(ctx.variateDeclarator(), this::visitVariateDeclarator);
     }
 
     default VariateDeclarator visitVariateDeclarator(VariateDeclaratorContext ctx) {
         VariateDeclarator result = new VariateDeclarator();
         this.accept(ctx.identifier(), this::visitIdentifier, result::setName);
-        this.accept(ctx.classType(), this::visitClassType, result::setType);
+        this.accept(ctx.useType(), this::visitUseType, result::setType);
+        this.accept(ctx.expression(), this::visitExpression, result::setInit);
         return result;
     }
 
+    AnnotatedNode visitAnnotated(AnnotatedContext ctx);
+
+    Expression visitExpression(ExpressionContext ctx);
+
     String visitIdentifier(IdentifierContext ctx);
 
-    ClassType visitClassType(ClassTypeContext ctx);
+    ClassTypeNode visitUseType(UseTypeContext ctx);
 }

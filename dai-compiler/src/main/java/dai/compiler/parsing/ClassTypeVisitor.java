@@ -1,61 +1,54 @@
 package dai.compiler.parsing;
 
 import dai.compiler.antlr.DaiParser.*;
-import dai.compiler.ast.ClassType;
+import dai.compiler.ast.ClassTypeNode;
 
 import java.util.List;
 
 public interface ClassTypeVisitor extends BaseVisitor {
 
-    default ClassType visitClassType(ClassTypeContext ctx) {
-        ClassType result = new ClassType();
+    default ClassTypeNode visitUseType(UseTypeContext ctx) {
+        ClassTypeNode result = new ClassTypeNode();
         this.accept(ctx.identifierPath(), this::visitIdentifierPath, result::setName);
-        this.accept(ctx.genericsParameters(), this::visitGenericsParameters, result::setGenericsParameters);
+        this.accept(ctx.useTypeParametersBlock(), this::visitUseTypeParametersBlock, result::setGenericsParameters);
         return result;
     }
 
-    default ClassType visitGenericsParameter(GenericsParameterContext ctx) {
-        ClassType result = new ClassType();
-        this.accept(ctx.identifierPath(), this::visitIdentifierPath, result::setName);
-        this.accept(ctx.genericsParameters(), this::visitGenericsParameters, result::setGenericsParameters);
-        return result;
+    default List<ClassTypeNode> visitUseTypes(UseTypesContext ctx) {
+        return this.map(ctx.useType(), this::visitUseType);
     }
 
-    default List<ClassType> visitGenericsParameterList(GenericsParameterListContext ctx) {
-        return this.map(ctx.genericsParameter(), this::visitGenericsParameter);
+    /* generics */
+
+    default ClassTypeNode visitUseTypeParameter(UseTypeParameterContext ctx) {
+        return this.map(ctx.useType(), this::visitUseType);
     }
 
-    default List<ClassType> visitGenericsParameters(GenericsParametersContext ctx) {
-        return this.map(ctx.genericsParameterList(), this::visitGenericsParameterList);
+    default List<ClassTypeNode> visitUseTypeParameters(UseTypeParametersContext ctx) {
+        return this.map(ctx.useTypeParameter(), this::visitUseTypeParameter);
     }
 
-    default ClassType visitDeclareGenericsParameter(DeclareGenericsParameterContext ctx) {
-        ClassType result = new ClassType();
+    default List<ClassTypeNode> visitUseTypeParametersBlock(UseTypeParametersBlockContext ctx) {
+        return this.map(ctx.useTypeParameters(), this::visitUseTypeParameters);
+    }
+
+    default ClassTypeNode visitDeclarationTypeParameter(DeclarationTypeParameterContext ctx) {
+        ClassTypeNode result = new ClassTypeNode();
         this.accept(ctx.identifier(), this::visitIdentifier, result::setName);
-        this.accept(ctx.declareGenericsParameterExtends(), this::visitDeclareGenericsParameterExtends, result::setSuperType);
+        this.accept(ctx.declarationTypeParameterExtends(), this::visitDeclarationTypeParameterExtends, result::setSuperType);
         return result;
     }
 
-    default ClassType visitDeclareGenericsParameterExtends(DeclareGenericsParameterExtendsContext ctx) {
-        ClassType result = new ClassType();
-        this.accept(ctx.identifier(), this::visitIdentifier, result::setName);
-        this.accept(ctx.declareGenericsParameterSuper(), this::visitDeclareGenericsParameterSuper, result::setSuperType);
-        return result;
+    default ClassTypeNode visitDeclarationTypeParameterExtends(DeclarationTypeParameterExtendsContext ctx) {
+        return this.map(ctx.useType(), this::visitUseType);
     }
 
-    default ClassType visitDeclareGenericsParameterSuper(DeclareGenericsParameterSuperContext ctx) {
-        ClassType result = new ClassType();
-        this.accept(ctx.identifierPath(), this::visitIdentifierPath, result::setName);
-        this.accept(ctx.genericsParameters(), this::visitGenericsParameters, result::setGenericsParameters);
-        return result;
+    default List<ClassTypeNode> visitDeclarationTypeParametersBlock(DeclarationTypeParametersBlockContext ctx) {
+        return this.map(ctx.declarationTypeParameters(), this::visitDeclarationTypeParameters);
     }
 
-    default List<ClassType> visitDeclareGenericsParameterList(DeclareGenericsParameterListContext ctx) {
-        return this.map(ctx.declareGenericsParameter(), this::visitDeclareGenericsParameter);
-    }
-
-    default List<ClassType> visitDeclareGenericsParameters(DeclareGenericsParametersContext ctx) {
-        return this.map(ctx.declareGenericsParameterList(), this::visitDeclareGenericsParameterList);
+    default List<ClassTypeNode> visitDeclarationTypeParameters(DeclarationTypeParametersContext ctx) {
+        return this.map(ctx.declarationTypeParameter(), this::visitDeclarationTypeParameter);
     }
 
     String visitIdentifier(IdentifierContext ctx);

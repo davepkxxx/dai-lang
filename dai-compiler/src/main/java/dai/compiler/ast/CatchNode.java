@@ -6,8 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Data
-public class CompilationUnit implements AstNode {
-    private PackageDeclaration package_;
-    private List<ImportDeclaration> imports = new ArrayList<>();
+public class CatchNode implements AstNode {
+    private VariateDeclarator parameter;
     private List<Statement> body = new ArrayList<>();
 }

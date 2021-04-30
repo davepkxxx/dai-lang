@@ -11,6 +11,15 @@ import java.util.function.Function;
 
 public interface BaseVisitor extends ParseTreeVisitor {
 
+    default <T, E extends ParseTree> T find(List<E> children, Function<E, T> mapper) {
+        if (children != null)
+            for (E child: children) {
+                T result = this.map(child, mapper);
+                if (result != null) return result;
+            }
+        return null;
+    }
+
     default <T, E extends ParseTree> T map(E ctx, Function<E, T> mapper) {
         return ctx == null ? null : mapper.apply(ctx);
     }

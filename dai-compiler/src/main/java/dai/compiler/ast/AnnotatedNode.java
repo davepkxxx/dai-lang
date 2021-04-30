@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Data
-public class PackageDeclaration implements Statement {
+public class AnnotatedNode implements AstNode {
     private String name;
-    private List<AnnotatedNode> annotations = new ArrayList<>();
+    private List<VariateDeclarator> parameters = new ArrayList<>();
 }

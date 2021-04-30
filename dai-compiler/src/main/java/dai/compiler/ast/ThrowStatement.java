@@ -3,6 +3,6 @@ package dai.compiler.ast;
 import lombok.Data;
 
 @Data
-public class ReturnStatement implements Statement {
+public class ThrowStatement implements AstNode {
     private Expression expression;
 }

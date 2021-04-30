@@ -10,35 +10,49 @@ public interface FunctionVisitor extends BaseVisitor {
     default FunctionDeclaration visitFunctionDeclaration(FunctionDeclarationContext ctx) {
         FunctionDeclaration result = new FunctionDeclaration();
         this.accept(ctx.identifier(), this::visitIdentifier, result::setName);
-        this.accept(ctx.declareGenericsParameters(), this::visitDeclareGenericsParameters, result::setGenericsParameters);
-        this.accept(ctx.functionParameters(), this::visitFunctionParameters, result::setParameters);
+        this.accept(ctx.annotated(), this::visitAnnotated, result.getAnnotations()::add);
+        this.accept(ctx.declarationTypeParametersBlock(), this::visitDeclarationTypeParametersBlock, result::setGenericsParameters);
+        this.accept(ctx.functionParameterDeclaratorsBlock(), this::visitFunctionParameterDeclaratorsBlock, result::setParameters);
         this.accept(ctx.functionReturn(), this::visitFunctionReturn, result::setReturnType);
-//        this.accept(ctx.block());
+        this.accept(ctx.body(), this::visitBody, result::setBody);
         return result;
     }
 
-    default List<VariateDeclarator> visitFunctionParameters(FunctionParametersContext ctx) {
-        return this.map(ctx.variateDeclaratorList(), this::visitVariateDeclaratorList);
+    default List<VariateDeclarator> visitFunctionParameterDeclarators(FunctionParameterDeclaratorsContext ctx) {
+        return this.map(ctx.functionParameterDeclarator(), this::visitFunctionParameterDeclarator);
     }
 
-    default ClassType visitFunctionReturn(FunctionReturnContext ctx) {
-        return this.map(ctx.classType(), this::visitClassType);
+    default List<VariateDeclarator> visitFunctionParameterDeclaratorsBlock(FunctionParameterDeclaratorsBlockContext ctx) {
+        return this.map(ctx.functionParameterDeclarators(), this::visitFunctionParameterDeclarators);
+    }
+
+    default VariateDeclarator visitFunctionParameterDeclarator(FunctionParameterDeclaratorContext ctx) {
+        VariateDeclarator result = this.map(ctx.variateDeclarator(), this::visitVariateDeclarator);
+        this.accept(ctx.annotated(), this::visitAnnotated, result.getAnnotations()::add);
+        return result;
+    }
+
+    default ClassTypeNode visitFunctionReturn(FunctionReturnContext ctx) {
+        return this.map(ctx.useType(), this::visitUseType);
     }
 
     default ReturnStatement visitReturnStatement(ReturnStatementContext ctx) {
         ReturnStatement result = new ReturnStatement();
-        this.accept(ctx.children, child -> {
-            Object childResult = child.accept(this);
-            return childResult instanceof Expression ? (Expression) childResult : (Expression) null;
-        }, result::setExpression);
+        this.accept(ctx.expression(), this::visitExpression, result::setExpression);
         return result;
     }
 
-    List<ClassType> visitDeclareGenericsParameters(DeclareGenericsParametersContext ctx);
+    AnnotatedNode visitAnnotated(AnnotatedContext ctx);
 
-    List<VariateDeclarator> visitVariateDeclaratorList(VariateDeclaratorListContext ctx);
+    Expression visitExpression(ExpressionContext ctx);
 
-    ClassType visitClassType(ClassTypeContext ctx);
+    List<Statement> visitBody(BodyContext ctx);
+
+    List<ClassTypeNode> visitDeclarationTypeParametersBlock(DeclarationTypeParametersBlockContext ctx);
+
+    VariateDeclarator visitVariateDeclarator(VariateDeclaratorContext ctx);
+
+    ClassTypeNode visitUseType(UseTypeContext ctx);
 
     String visitIdentifier(IdentifierContext ctx);
 }

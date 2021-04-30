@@ -6,11 +6,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Data
-public class FunctionDeclaration implements Statement {
-    private String name;
+public class ConstructorDeclaration implements Statement {
     private List<AnnotatedNode> annotations = new ArrayList<>();
-    private List<ClassTypeNode> genericsParameters = new ArrayList<>();
     private List<VariateDeclarator> parameters = new ArrayList<>();
-    private ClassTypeNode returnType;
     private List<Statement> body = new ArrayList<>();
 }
