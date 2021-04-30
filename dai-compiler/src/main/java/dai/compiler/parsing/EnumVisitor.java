@@ -10,13 +10,9 @@ public interface EnumVisitor extends BaseVisitor {
         EnumDeclaration result = new EnumDeclaration();
         this.accept(ctx.identifier(), this::visitIdentifier, result::setName);
         this.accept(ctx.annotated(), this::visitAnnotated, result.getAnnotations()::add);
-        this.accept(ctx.useTypeParameter(), this::visitUseTypeParameter, result::setGenericsParameter);
-        this.accept(ctx.enumBody(), this::visitEnumBody, result::setFields);
+        this.accept(ctx.useTypeParam(), this::visitUseTypeParam, result::setGenericsParameter);
+        this.accept(ctx.enumFieldDeclarators(), this::visitEnumFieldDeclarators, result::setFields);
         return result;
-    }
-
-    default List<VariateDeclarator> visitEnumBody(EnumBodyContext ctx) {
-        return this.map(ctx.enumFieldDeclarators(), this::visitEnumFieldDeclarators);
     }
 
     default VariateDeclarator visitEnumFieldDeclarator(EnumFieldDeclaratorContext ctx) {
@@ -37,5 +33,5 @@ public interface EnumVisitor extends BaseVisitor {
 
     String visitIdentifier(IdentifierContext ctx);
 
-    ClassTypeNode visitUseTypeParameter(UseTypeParameterContext ctx);
+    ClassTypeNode visitUseTypeParam(UseTypeParamContext ctx);
 }

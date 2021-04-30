@@ -13,17 +13,13 @@ public interface StructVisitor extends BaseVisitor {
         StructDeclaration result = new StructDeclaration();
         this.accept(ctx.identifier(), this::visitIdentifier, result::setName);
         this.accept(ctx.annotated(), this::visitAnnotated, result.getAnnotations()::add);
-        this.accept(ctx.declarationTypeParametersBlock(), this::visitDeclarationTypeParametersBlock, result::setGenericsParameters);
-        this.accept(ctx.declareExtends(), this::visitDeclareExtends, result::setSuperType);
-        this.accept(ctx.structBody(), this::visitStructBody, result::setFields);
+        this.accept(ctx.declTypeParamsBlock(), this::visitDeclTypeParamsBlock, result::setGenericsParameters);
+        this.accept(ctx.extendsBlock(), this::visitExtendsBlock, result::setSuperType);
+        this.accept(ctx.variateDeclaration(), this::visitVariateDeclaration, result.getFields()::add);
         return result;
     }
 
-    default List<VariateDeclaration> visitStructBody(StructBodyContext ctx) {
-        return this.map(ctx.variateDeclaration(), this::visitVariateDeclaration);
-    }
-
-    default ClassTypeNode visitDeclareExtends(DeclareExtendsContext ctx) {
+    default ClassTypeNode visitExtendsBlock(ExtendsBlockContext ctx) {
         return this.map(ctx.useType(), this::visitUseType);
     }
 
@@ -35,5 +31,5 @@ public interface StructVisitor extends BaseVisitor {
 
     VariateDeclaration visitVariateDeclaration(VariateDeclarationContext ctx);
 
-    List<ClassTypeNode> visitDeclarationTypeParametersBlock(DeclarationTypeParametersBlockContext ctx);
+    List<ClassTypeNode> visitDeclTypeParamsBlock(DeclTypeParamsBlockContext ctx);
 }

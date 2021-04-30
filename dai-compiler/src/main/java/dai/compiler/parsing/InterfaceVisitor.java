@@ -10,38 +10,39 @@ public interface InterfaceVisitor extends BaseVisitor {
         InterfaceDeclaration result = new InterfaceDeclaration();
         this.accept(ctx.identifier(), this::visitIdentifier, result::setName);
         this.accept(ctx.annotated(), this::visitAnnotated, result.getAnnotations()::add);
-        this.accept(ctx.declarationTypeParametersBlock(), this::visitDeclarationTypeParametersBlock, result::setGenericsParameters);
-        this.accept(ctx.declareExtends(), this::visitDeclareExtends, result::setSuperType);
+        this.accept(ctx.declTypeParamsBlock(), this::visitDeclTypeParamsBlock, result::setGenericsParameters);
+        this.accept(ctx.extendsBlock(), this::visitExtendsBlock, result::setSuperType);
+        this.map(ctx.interfaceMemberDeclaration(), this::visitInterfaceMemberDeclaration).forEach(member -> {
+            if (member instanceof VariateDeclaration) result.getFields().add((VariateDeclaration) member);
+            if (member instanceof FunctionDeclaration) result.getMethods().add((FunctionDeclaration) member);
+            if (member instanceof AbstractFunctionDeclaration) result.getAbstractMethods().add((AbstractFunctionDeclaration) member);
+        });
         return result;
-    }
-
-    default List<Statement> visitInterfaceBody(InterfaceBodyContext ctx) {
-        return this.map(ctx.interfaceMemberDeclaration(), this::visitInterfaceMemberDeclaration);
     }
 
     default Statement visitInterfaceMemberDeclaration(InterfaceMemberDeclarationContext ctx) {
         return this.find(ctx.children, result -> result instanceof Statement ? (Statement) result : (Statement) null);
     }
 
-    default AbstractFunctionDeclaration visitAbstractFunctionDeclaration(AbstractFunctionDeclarationContext ctx) {
+    default AbstractFunctionDeclaration visitAbstractFuncDeclaration(AbstractFuncDeclarationContext ctx) {
         AbstractFunctionDeclaration result = new AbstractFunctionDeclaration();
         this.accept(ctx.identifier(), this::visitIdentifier, result::setName);
         this.accept(ctx.annotated(), this::visitAnnotated, result.getAnnotations()::add);
-        this.accept(ctx.declarationTypeParametersBlock(), this::visitDeclarationTypeParametersBlock, result::setGenericsParameters);
-        this.accept(ctx.functionParameterDeclaratorsBlock(), this::visitFunctionParameterDeclaratorsBlock, result::setParameters);
-        this.accept(ctx.functionReturn(), this::visitFunctionReturn, result::setReturnType);
+        this.accept(ctx.declTypeParamsBlock(), this::visitDeclTypeParamsBlock, result::setGenericsParameters);
+        this.accept(ctx.funcParamsBlock(), this::visitFuncParamsBlock, result::setParameters);
+        this.accept(ctx.funcReturn(), this::visitFuncReturn, result::setReturnType);
         return result;
     }
 
     String visitIdentifier(IdentifierContext ctx);
 
-    ClassTypeNode visitDeclareExtends(DeclareExtendsContext ctx);
+    ClassTypeNode visitExtendsBlock(ExtendsBlockContext ctx);
 
-    List<ClassTypeNode> visitDeclarationTypeParametersBlock(DeclarationTypeParametersBlockContext ctx);
+    List<ClassTypeNode> visitDeclTypeParamsBlock(DeclTypeParamsBlockContext ctx);
 
-    List<VariateDeclarator> visitFunctionParameterDeclaratorsBlock(FunctionParameterDeclaratorsBlockContext ctx);
+    List<VariateDeclarator> visitFuncParamsBlock(FuncParamsBlockContext ctx);
 
-    ClassTypeNode visitFunctionReturn(FunctionReturnContext ctx);
+    ClassTypeNode visitFuncReturn(FuncReturnContext ctx);
 
     AnnotatedNode visitAnnotated(AnnotatedContext ctx);
 }

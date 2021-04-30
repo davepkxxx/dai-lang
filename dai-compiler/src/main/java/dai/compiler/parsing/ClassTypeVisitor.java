@@ -10,7 +10,7 @@ public interface ClassTypeVisitor extends BaseVisitor {
     default ClassTypeNode visitUseType(UseTypeContext ctx) {
         ClassTypeNode result = new ClassTypeNode();
         this.accept(ctx.identifierPath(), this::visitIdentifierPath, result::setName);
-        this.accept(ctx.useTypeParametersBlock(), this::visitUseTypeParametersBlock, result::setGenericsParameters);
+        this.accept(ctx.useTypeParamsBlock(), this::visitUseTypeParamsBlock, result::setGenericsParameters);
         return result;
     }
 
@@ -20,35 +20,35 @@ public interface ClassTypeVisitor extends BaseVisitor {
 
     /* generics */
 
-    default ClassTypeNode visitUseTypeParameter(UseTypeParameterContext ctx) {
+    default ClassTypeNode visitUseTypeParam(UseTypeParamContext ctx) {
         return this.map(ctx.useType(), this::visitUseType);
     }
 
-    default List<ClassTypeNode> visitUseTypeParameters(UseTypeParametersContext ctx) {
-        return this.map(ctx.useTypeParameter(), this::visitUseTypeParameter);
+    default List<ClassTypeNode> visitUseTypeParams(UseTypeParamsContext ctx) {
+        return this.map(ctx.useTypeParam(), this::visitUseTypeParam);
     }
 
-    default List<ClassTypeNode> visitUseTypeParametersBlock(UseTypeParametersBlockContext ctx) {
-        return this.map(ctx.useTypeParameters(), this::visitUseTypeParameters);
+    default List<ClassTypeNode> visitUseTypeParamsBlock(UseTypeParamsBlockContext ctx) {
+        return this.map(ctx.useTypeParams(), this::visitUseTypeParams);
     }
 
-    default ClassTypeNode visitDeclarationTypeParameter(DeclarationTypeParameterContext ctx) {
+    default ClassTypeNode visitDeclTypeParam(DeclTypeParamContext ctx) {
         ClassTypeNode result = new ClassTypeNode();
         this.accept(ctx.identifier(), this::visitIdentifier, result::setName);
-        this.accept(ctx.declarationTypeParameterExtends(), this::visitDeclarationTypeParameterExtends, result::setSuperType);
+        this.accept(ctx.declTypeParamExtends(), this::visitDeclTypeParamExtends, result::setSuperType);
         return result;
     }
 
-    default ClassTypeNode visitDeclarationTypeParameterExtends(DeclarationTypeParameterExtendsContext ctx) {
+    default ClassTypeNode visitDeclTypeParamExtends(DeclTypeParamExtendsContext ctx) {
         return this.map(ctx.useType(), this::visitUseType);
     }
 
-    default List<ClassTypeNode> visitDeclarationTypeParametersBlock(DeclarationTypeParametersBlockContext ctx) {
-        return this.map(ctx.declarationTypeParameters(), this::visitDeclarationTypeParameters);
+    default List<ClassTypeNode> visitDeclTypeParamsBlock(DeclTypeParamsBlockContext ctx) {
+        return this.map(ctx.declTypeParams(), this::visitDeclTypeParams);
     }
 
-    default List<ClassTypeNode> visitDeclarationTypeParameters(DeclarationTypeParametersContext ctx) {
-        return this.map(ctx.declarationTypeParameter(), this::visitDeclarationTypeParameter);
+    default List<ClassTypeNode> visitDeclTypeParams(DeclTypeParamsContext ctx) {
+        return this.map(ctx.declTypeParam(), this::visitDeclTypeParam);
     }
 
     String visitIdentifier(IdentifierContext ctx);

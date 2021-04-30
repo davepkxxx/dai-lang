@@ -13,4 +13,5 @@ public class InterfaceDeclaration implements Statement {
     private ClassTypeNode superType;
     private List<VariateDeclaration> fields = new ArrayList<>();
     private List<FunctionDeclaration> methods = new ArrayList<>();
+    private List<AbstractFunctionDeclaration> abstractMethods = new ArrayList<>();
 }

@@ -7,39 +7,33 @@ import java.util.List;
 
 public interface FunctionVisitor extends BaseVisitor {
 
-    default FunctionDeclaration visitFunctionDeclaration(FunctionDeclarationContext ctx) {
+    default FunctionDeclaration visitFuncDeclaration(FuncDeclarationContext ctx) {
         FunctionDeclaration result = new FunctionDeclaration();
         this.accept(ctx.identifier(), this::visitIdentifier, result::setName);
         this.accept(ctx.annotated(), this::visitAnnotated, result.getAnnotations()::add);
-        this.accept(ctx.declarationTypeParametersBlock(), this::visitDeclarationTypeParametersBlock, result::setGenericsParameters);
-        this.accept(ctx.functionParameterDeclaratorsBlock(), this::visitFunctionParameterDeclaratorsBlock, result::setParameters);
-        this.accept(ctx.functionReturn(), this::visitFunctionReturn, result::setReturnType);
+        this.accept(ctx.declTypeParamsBlock(), this::visitDeclTypeParamsBlock, result::setGenericsParameters);
+        this.accept(ctx.funcParamsBlock(), this::visitFuncParamsBlock, result::setParameters);
+        this.accept(ctx.funcReturn(), this::visitFuncReturn, result::setReturnType);
         this.accept(ctx.body(), this::visitBody, result::setBody);
         return result;
     }
 
-    default List<VariateDeclarator> visitFunctionParameterDeclarators(FunctionParameterDeclaratorsContext ctx) {
-        return this.map(ctx.functionParameterDeclarator(), this::visitFunctionParameterDeclarator);
+    default List<VariateDeclarator> visitFuncParams(FuncParamsContext ctx) {
+        return this.map(ctx.funcParam(), this::visitFuncParam);
     }
 
-    default List<VariateDeclarator> visitFunctionParameterDeclaratorsBlock(FunctionParameterDeclaratorsBlockContext ctx) {
-        return this.map(ctx.functionParameterDeclarators(), this::visitFunctionParameterDeclarators);
+    default List<VariateDeclarator> visitFuncParamsBlock(FuncParamsBlockContext ctx) {
+        return this.map(ctx.funcParams(), this::visitFuncParams);
     }
 
-    default VariateDeclarator visitFunctionParameterDeclarator(FunctionParameterDeclaratorContext ctx) {
+    default VariateDeclarator visitFuncParam(FuncParamContext ctx) {
         VariateDeclarator result = this.map(ctx.variateDeclarator(), this::visitVariateDeclarator);
         this.accept(ctx.annotated(), this::visitAnnotated, result.getAnnotations()::add);
         return result;
     }
 
-    default ClassTypeNode visitFunctionReturn(FunctionReturnContext ctx) {
+    default ClassTypeNode visitFuncReturn(FuncReturnContext ctx) {
         return this.map(ctx.useType(), this::visitUseType);
-    }
-
-    default ReturnStatement visitReturnStatement(ReturnStatementContext ctx) {
-        ReturnStatement result = new ReturnStatement();
-        this.accept(ctx.expression(), this::visitExpression, result::setExpression);
-        return result;
     }
 
     AnnotatedNode visitAnnotated(AnnotatedContext ctx);
@@ -48,7 +42,7 @@ public interface FunctionVisitor extends BaseVisitor {
 
     List<Statement> visitBody(BodyContext ctx);
 
-    List<ClassTypeNode> visitDeclarationTypeParametersBlock(DeclarationTypeParametersBlockContext ctx);
+    List<ClassTypeNode> visitDeclTypeParamsBlock(DeclTypeParamsBlockContext ctx);
 
     VariateDeclarator visitVariateDeclarator(VariateDeclaratorContext ctx);
 

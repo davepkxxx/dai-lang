@@ -35,35 +35,145 @@ public interface DaiParserVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitStatement(DaiParser.StatementContext ctx);
 	/**
+	 * Visit a parse tree produced by the {@code blockStatement}
+	 * labeled alternative in {@link DaiParser#stmt}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitBlockStatement(DaiParser.BlockStatementContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code continueStatement}
+	 * labeled alternative in {@link DaiParser#stmt}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitContinueStatement(DaiParser.ContinueStatementContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code breakStatement}
+	 * labeled alternative in {@link DaiParser#stmt}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitBreakStatement(DaiParser.BreakStatementContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code returnStatement}
+	 * labeled alternative in {@link DaiParser#stmt}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitReturnStatement(DaiParser.ReturnStatementContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code throwStatement}
+	 * labeled alternative in {@link DaiParser#stmt}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitThrowStatement(DaiParser.ThrowStatementContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code tryStatement}
+	 * labeled alternative in {@link DaiParser#stmt}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitTryStatement(DaiParser.TryStatementContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code ifStatement}
+	 * labeled alternative in {@link DaiParser#stmt}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitIfStatement(DaiParser.IfStatementContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code switchStatement}
+	 * labeled alternative in {@link DaiParser#stmt}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitSwitchStatement(DaiParser.SwitchStatementContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code whileStatement}
+	 * labeled alternative in {@link DaiParser#stmt}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitWhileStatement(DaiParser.WhileStatementContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code doWhileStatement}
+	 * labeled alternative in {@link DaiParser#stmt}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitDoWhileStatement(DaiParser.DoWhileStatementContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code forStatement}
+	 * labeled alternative in {@link DaiParser#stmt}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitForStatement(DaiParser.ForStatementContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code forInStatement}
+	 * labeled alternative in {@link DaiParser#stmt}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitForInStatement(DaiParser.ForInStatementContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code expressionStatement}
+	 * labeled alternative in {@link DaiParser#stmt}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitExpressionStatement(DaiParser.ExpressionStatementContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code emptyStatement}
+	 * labeled alternative in {@link DaiParser#stmt}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitEmptyStatement(DaiParser.EmptyStatementContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link DaiParser#body}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
 	T visitBody(DaiParser.BodyContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link DaiParser#blockStatement}.
+	 * Visit a parse tree produced by {@link DaiParser#catchBlock}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitBlockStatement(DaiParser.BlockStatementContext ctx);
+	T visitCatchBlock(DaiParser.CatchBlockContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link DaiParser#emptyStatement}.
+	 * Visit a parse tree produced by {@link DaiParser#condition}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitEmptyStatement(DaiParser.EmptyStatementContext ctx);
+	T visitCondition(DaiParser.ConditionContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link DaiParser#continueStatement}.
+	 * Visit a parse tree produced by {@link DaiParser#switchCaseBlock}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitContinueStatement(DaiParser.ContinueStatementContext ctx);
+	T visitSwitchCaseBlock(DaiParser.SwitchCaseBlockContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link DaiParser#breakStatement}.
+	 * Visit a parse tree produced by {@link DaiParser#switchCaseLabel}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitBreakStatement(DaiParser.BreakStatementContext ctx);
+	T visitSwitchCaseLabel(DaiParser.SwitchCaseLabelContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link DaiParser#forInit}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitForInit(DaiParser.ForInitContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link DaiParser#forInitDeclaration}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitForInitDeclaration(DaiParser.ForInitDeclarationContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link DaiParser#variateDeclaration}.
 	 * @param ctx the parse tree
@@ -83,53 +193,41 @@ public interface DaiParserVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitVariateDeclarator(DaiParser.VariateDeclaratorContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link DaiParser#functionDeclaration}.
+	 * Visit a parse tree produced by {@link DaiParser#funcDeclaration}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitFunctionDeclaration(DaiParser.FunctionDeclarationContext ctx);
+	T visitFuncDeclaration(DaiParser.FuncDeclarationContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link DaiParser#functionParameterDeclaratorsBlock}.
+	 * Visit a parse tree produced by {@link DaiParser#funcParamsBlock}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitFunctionParameterDeclaratorsBlock(DaiParser.FunctionParameterDeclaratorsBlockContext ctx);
+	T visitFuncParamsBlock(DaiParser.FuncParamsBlockContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link DaiParser#functionParameterDeclarators}.
+	 * Visit a parse tree produced by {@link DaiParser#funcParams}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitFunctionParameterDeclarators(DaiParser.FunctionParameterDeclaratorsContext ctx);
+	T visitFuncParams(DaiParser.FuncParamsContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link DaiParser#functionParameterDeclarator}.
+	 * Visit a parse tree produced by {@link DaiParser#funcParam}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitFunctionParameterDeclarator(DaiParser.FunctionParameterDeclaratorContext ctx);
+	T visitFuncParam(DaiParser.FuncParamContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link DaiParser#functionReturn}.
+	 * Visit a parse tree produced by {@link DaiParser#funcReturn}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitFunctionReturn(DaiParser.FunctionReturnContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link DaiParser#returnStatement}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitReturnStatement(DaiParser.ReturnStatementContext ctx);
+	T visitFuncReturn(DaiParser.FuncReturnContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link DaiParser#enumDeclaration}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
 	T visitEnumDeclaration(DaiParser.EnumDeclarationContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link DaiParser#enumBody}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitEnumBody(DaiParser.EnumBodyContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link DaiParser#enumFieldDeclarator}.
 	 * @param ctx the parse tree
@@ -149,29 +247,17 @@ public interface DaiParserVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitStructDeclaration(DaiParser.StructDeclarationContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link DaiParser#structBody}.
+	 * Visit a parse tree produced by {@link DaiParser#extendsBlock}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitStructBody(DaiParser.StructBodyContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link DaiParser#declareExtends}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitDeclareExtends(DaiParser.DeclareExtendsContext ctx);
+	T visitExtendsBlock(DaiParser.ExtendsBlockContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link DaiParser#classDeclaration}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
 	T visitClassDeclaration(DaiParser.ClassDeclarationContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link DaiParser#classBody}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitClassBody(DaiParser.ClassBodyContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link DaiParser#classMemberDeclaration}.
 	 * @param ctx the parse tree
@@ -185,23 +271,11 @@ public interface DaiParserVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitConstructorDeclaration(DaiParser.ConstructorDeclarationContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link DaiParser#declareImplements}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitDeclareImplements(DaiParser.DeclareImplementsContext ctx);
-	/**
 	 * Visit a parse tree produced by {@link DaiParser#interfaceDeclaration}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
 	T visitInterfaceDeclaration(DaiParser.InterfaceDeclarationContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link DaiParser#interfaceBody}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitInterfaceBody(DaiParser.InterfaceBodyContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link DaiParser#interfaceMemberDeclaration}.
 	 * @param ctx the parse tree
@@ -209,11 +283,11 @@ public interface DaiParserVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitInterfaceMemberDeclaration(DaiParser.InterfaceMemberDeclarationContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link DaiParser#abstractFunctionDeclaration}.
+	 * Visit a parse tree produced by {@link DaiParser#abstractFuncDeclaration}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitAbstractFunctionDeclaration(DaiParser.AbstractFunctionDeclarationContext ctx);
+	T visitAbstractFuncDeclaration(DaiParser.AbstractFuncDeclarationContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link DaiParser#annotationDeclaration}.
 	 * @param ctx the parse tree
@@ -221,113 +295,11 @@ public interface DaiParserVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitAnnotationDeclaration(DaiParser.AnnotationDeclarationContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link DaiParser#annotationBody}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitAnnotationBody(DaiParser.AnnotationBodyContext ctx);
-	/**
 	 * Visit a parse tree produced by {@link DaiParser#annotated}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
 	T visitAnnotated(DaiParser.AnnotatedContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link DaiParser#throwStatement}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitThrowStatement(DaiParser.ThrowStatementContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link DaiParser#tryStatement}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitTryStatement(DaiParser.TryStatementContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link DaiParser#catchBlock}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitCatchBlock(DaiParser.CatchBlockContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link DaiParser#finallyBlock}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitFinallyBlock(DaiParser.FinallyBlockContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link DaiParser#ifStatement}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitIfStatement(DaiParser.IfStatementContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link DaiParser#elseBlock}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitElseBlock(DaiParser.ElseBlockContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link DaiParser#condition}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitCondition(DaiParser.ConditionContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link DaiParser#switchStatement}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitSwitchStatement(DaiParser.SwitchStatementContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link DaiParser#switchCaseBlock}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitSwitchCaseBlock(DaiParser.SwitchCaseBlockContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link DaiParser#switchCaseLabel}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitSwitchCaseLabel(DaiParser.SwitchCaseLabelContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link DaiParser#whileStatement}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitWhileStatement(DaiParser.WhileStatementContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link DaiParser#doWhileStatement}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitDoWhileStatement(DaiParser.DoWhileStatementContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link DaiParser#forStatement}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitForStatement(DaiParser.ForStatementContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link DaiParser#forInit}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitForInit(DaiParser.ForInitContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link DaiParser#forInitDeclaration}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitForInitDeclaration(DaiParser.ForInitDeclarationContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link DaiParser#forInStatement}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitForInStatement(DaiParser.ForInStatementContext ctx);
 	/**
 	 * Visit a parse tree produced by the {@code incrementalExpression}
 	 * labeled alternative in {@link DaiParser#expr}.
@@ -530,47 +502,41 @@ public interface DaiParserVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitExpressions(DaiParser.ExpressionsContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link DaiParser#expressionStatement}.
+	 * Visit a parse tree produced by {@link DaiParser#param}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitExpressionStatement(DaiParser.ExpressionStatementContext ctx);
+	T visitParam(DaiParser.ParamContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link DaiParser#parameter}.
+	 * Visit a parse tree produced by {@link DaiParser#params}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitParameter(DaiParser.ParameterContext ctx);
+	T visitParams(DaiParser.ParamsContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link DaiParser#parameters}.
+	 * Visit a parse tree produced by {@link DaiParser#paramsBlock}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitParameters(DaiParser.ParametersContext ctx);
+	T visitParamsBlock(DaiParser.ParamsBlockContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link DaiParser#parametersBlock}.
+	 * Visit a parse tree produced by {@link DaiParser#namedParam}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitParametersBlock(DaiParser.ParametersBlockContext ctx);
+	T visitNamedParam(DaiParser.NamedParamContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link DaiParser#namedParameter}.
+	 * Visit a parse tree produced by {@link DaiParser#namedParams}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitNamedParameter(DaiParser.NamedParameterContext ctx);
+	T visitNamedParams(DaiParser.NamedParamsContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link DaiParser#namedParameters}.
+	 * Visit a parse tree produced by {@link DaiParser#namedParamsBlock}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitNamedParameters(DaiParser.NamedParametersContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link DaiParser#namedParametersBlock}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitNamedParametersBlock(DaiParser.NamedParametersBlockContext ctx);
+	T visitNamedParamsBlock(DaiParser.NamedParamsBlockContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link DaiParser#assignOperator}.
 	 * @param ctx the parse tree
@@ -578,11 +544,61 @@ public interface DaiParserVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitAssignOperator(DaiParser.AssignOperatorContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link DaiParser#literal}.
+	 * Visit a parse tree produced by the {@code integerLiteral}
+	 * labeled alternative in {@link DaiParser#literal}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitLiteral(DaiParser.LiteralContext ctx);
+	T visitIntegerLiteral(DaiParser.IntegerLiteralContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code longLiteral}
+	 * labeled alternative in {@link DaiParser#literal}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitLongLiteral(DaiParser.LongLiteralContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code floatLiteral}
+	 * labeled alternative in {@link DaiParser#literal}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitFloatLiteral(DaiParser.FloatLiteralContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code doubleLiteral}
+	 * labeled alternative in {@link DaiParser#literal}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitDoubleLiteral(DaiParser.DoubleLiteralContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code characterLiteral}
+	 * labeled alternative in {@link DaiParser#literal}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitCharacterLiteral(DaiParser.CharacterLiteralContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code stringLiteral}
+	 * labeled alternative in {@link DaiParser#literal}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitStringLiteral(DaiParser.StringLiteralContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code booleanLiteral}
+	 * labeled alternative in {@link DaiParser#literal}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitBooleanLiteral(DaiParser.BooleanLiteralContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code nullLiteral}
+	 * labeled alternative in {@link DaiParser#literal}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitNullLiteral(DaiParser.NullLiteralContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link DaiParser#arrayLiteral}.
 	 * @param ctx the parse tree
@@ -601,12 +617,6 @@ public interface DaiParserVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitObjectProperty(DaiParser.ObjectPropertyContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link DaiParser#objectProperties}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitObjectProperties(DaiParser.ObjectPropertiesContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link DaiParser#identifier}.
 	 * @param ctx the parse tree
@@ -632,47 +642,47 @@ public interface DaiParserVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitUseTypes(DaiParser.UseTypesContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link DaiParser#useTypeParameter}.
+	 * Visit a parse tree produced by {@link DaiParser#useTypeParam}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitUseTypeParameter(DaiParser.UseTypeParameterContext ctx);
+	T visitUseTypeParam(DaiParser.UseTypeParamContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link DaiParser#useTypeParameters}.
+	 * Visit a parse tree produced by {@link DaiParser#useTypeParams}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitUseTypeParameters(DaiParser.UseTypeParametersContext ctx);
+	T visitUseTypeParams(DaiParser.UseTypeParamsContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link DaiParser#useTypeParametersBlock}.
+	 * Visit a parse tree produced by {@link DaiParser#useTypeParamsBlock}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitUseTypeParametersBlock(DaiParser.UseTypeParametersBlockContext ctx);
+	T visitUseTypeParamsBlock(DaiParser.UseTypeParamsBlockContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link DaiParser#declarationTypeParameter}.
+	 * Visit a parse tree produced by {@link DaiParser#declTypeParam}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitDeclarationTypeParameter(DaiParser.DeclarationTypeParameterContext ctx);
+	T visitDeclTypeParam(DaiParser.DeclTypeParamContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link DaiParser#declarationTypeParameters}.
+	 * Visit a parse tree produced by {@link DaiParser#declTypeParams}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitDeclarationTypeParameters(DaiParser.DeclarationTypeParametersContext ctx);
+	T visitDeclTypeParams(DaiParser.DeclTypeParamsContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link DaiParser#declarationTypeParametersBlock}.
+	 * Visit a parse tree produced by {@link DaiParser#declTypeParamsBlock}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitDeclarationTypeParametersBlock(DaiParser.DeclarationTypeParametersBlockContext ctx);
+	T visitDeclTypeParamsBlock(DaiParser.DeclTypeParamsBlockContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link DaiParser#declarationTypeParameterExtends}.
+	 * Visit a parse tree produced by {@link DaiParser#declTypeParamExtends}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitDeclarationTypeParameterExtends(DaiParser.DeclarationTypeParameterExtendsContext ctx);
+	T visitDeclTypeParamExtends(DaiParser.DeclTypeParamExtendsContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link DaiParser#eos}.
 	 * @param ctx the parse tree

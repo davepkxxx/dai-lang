@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
-public interface BaseVisitor extends ParseTreeVisitor {
+public interface BaseVisitor extends ParseTreeVisitor<Object> {
 
     default <T, E extends ParseTree> T find(List<E> children, Function<E, T> mapper) {
         if (children != null)

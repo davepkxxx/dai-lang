@@ -10,18 +10,14 @@ public interface AnnotationVisitor extends BaseVisitor {
         AnnotationDeclaration result = new AnnotationDeclaration();
         this.accept(ctx.identifier(), this::visitIdentifier, result::setName);
         this.accept(ctx.annotated(), this::visitAnnotated, result.getAnnotations()::add);
-        this.accept(ctx.annotationBody(), this::visitAnnotationBody, result::setFields);
+        this.accept(ctx.variateDeclaration(), this::visitVariateDeclaration, result.getFields()::add);
         return result;
-    }
-
-    default List<VariateDeclaration> visitAnnotationBody(AnnotationBodyContext ctx) {
-        return this.map(ctx.variateDeclaration(), this::visitVariateDeclaration);
     }
 
     default AnnotatedNode visitAnnotated(AnnotatedContext ctx) {
         AnnotatedNode result = new AnnotatedNode();
         this.accept(ctx.identifierPath(), this::visitIdentifierPath, result::setName);
-        this.accept(ctx.namedParametersBlock(), this::visitNamedParametersBlock, result::setParameters);
+        this.accept(ctx.namedParamsBlock(), this::visitNamedParamsBlock, result::setParameters);
         return result;
     }
 
@@ -31,5 +27,5 @@ public interface AnnotationVisitor extends BaseVisitor {
 
     VariateDeclaration visitVariateDeclaration(VariateDeclarationContext ctx);
 
-    List<VariateDeclarator> visitNamedParametersBlock(NamedParametersBlockContext ctx);
+    List<VariateDeclarator> visitNamedParamsBlock(NamedParamsBlockContext ctx);
 }

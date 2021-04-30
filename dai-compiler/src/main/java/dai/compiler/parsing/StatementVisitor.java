@@ -28,10 +28,7 @@ public interface StatementVisitor extends BaseVisitor {
 
     default BlockStatement visitBlockStatement(BlockStatementContext ctx) {
         BlockStatement result = new BlockStatement();
-        this.accept(ctx.statement(), child -> {
-            Object childResult = child.accept(this);
-            return childResult instanceof Statement ? (Statement) childResult : (Statement) null;
-        }, result.getBody()::add);
+        this.accept(ctx.body(), this::visitBody, result::setBody);
         return result;
     }
 
@@ -49,7 +46,7 @@ public interface StatementVisitor extends BaseVisitor {
         TryStatement result = new TryStatement();
         this.accept(ctx.body(), this::visitBody, result::setTryBody);
         this.accept(ctx.catchBlock(), this::visitCatchBlock, result.getCatches()::add);
-        this.accept(ctx.finallyBlock(), this::visitFinallyBlock, result::setFinallyBody);
+        this.accept(ctx.finallyBody, this::visitBody, result::setFinallyBody);
         return result;
     }
 
@@ -60,28 +57,20 @@ public interface StatementVisitor extends BaseVisitor {
         return result;
     }
 
-    default List<Statement> visitFinallyBlock(FinallyBlockContext ctx) {
-        return this.map(ctx.body(), this::visitBody);
-    }
-
     /* if */
 
     default IfStatement visitIfStatement(IfStatementContext ctx) {
         IfStatement result = new IfStatement();
         this.accept(ctx.condition(), this::visitCondition, result::setCondition);
         this.accept(ctx.statement(), this::visitStatement, result::setConsequent);
-        this.accept(ctx.elseBlock(), this::visitElseBlock, result::setAlternate);
+        this.accept(ctx.elseStatement, this::visitStatement, result::setAlternate);
         return result;
-    }
-
-    default Statement visitElseBlock(ElseBlockContext ctx) {
-        return this.map(ctx.statement(), this::visitStatement);
     }
 
     default Expression visitCondition(ConditionContext ctx) {
         return this.map(ctx.expression(), this::visitExpression);
     }
-    
+
     /* switch */
 
     default SwitchStatement visitSwitchStatement(SwitchStatementContext ctx) {
@@ -152,12 +141,33 @@ public interface StatementVisitor extends BaseVisitor {
     default ForInStatement visitForInStatement(ForInStatementContext ctx) {
         ForInStatement result = new ForInStatement();
         this.accept(ctx.expression(), this::visitExpression, result::setCollection);
-
-        List<String> identifiers = this.map(ctx.identifier(), this::visitIdentifier);
-        if (identifiers.size() > 0) result.setElement(identifiers.get(0));
-        if (identifiers.size() > 1) result.setIndex(identifiers.get(1));
-
+        this.accept(ctx.element, this::visitIdentifier, result::setElement);
+        this.accept(ctx.index, this::visitIdentifier, result::setIndex);
         this.accept(ctx.statement(), this::visitStatement, result::setBody);
+        return result;
+    }
+
+    /* continue & break & return */
+
+    default BreakStatement visitContinueStatement(ContinueStatementContext ctx) {
+        return new BreakStatement();
+    }
+
+    default ContinueStatement visitBreakStatement(BreakStatementContext ctx) {
+        return new ContinueStatement();
+    }
+
+    default ReturnStatement visitReturnStatement(ReturnStatementContext ctx) {
+        ReturnStatement result = new ReturnStatement();
+        this.accept(ctx.expression(), this::visitExpression, result::setExpression);
+        return result;
+    }
+
+    /* expression */
+
+    default ExpressionStatement visitExpressionStatement(ExpressionStatementContext ctx) {
+        ExpressionStatement result = new ExpressionStatement();
+        this.accept(ctx.expression(), this::visitExpression, result::setExpression);
         return result;
     }
 

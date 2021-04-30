@@ -7,34 +7,34 @@ import java.util.List;
 
 public interface ParameterVisitor extends BaseVisitor {
 
-    default ParameterNode visitParameter(ParameterContext ctx) {
+    default ParameterNode visitParam(ParamContext ctx) {
         ParameterNode result = new ParameterNode();
         this.accept(ctx.expression(), this::visitExpression, result::setExpression);
-        this.accept(ctx.namedParameter(), this::visitNamedParameter, result::setNamedParameter);
+        this.accept(ctx.namedParam(), this::visitNamedParam, result::setNamedParameter);
         return result;
     }
 
-    default List<ParameterNode> visitParameters(ParametersContext ctx) {
-        return this.map(ctx.parameter(), this::visitParameter);
+    default List<ParameterNode> visitParams(ParamsContext ctx) {
+        return this.map(ctx.param(), this::visitParam);
     }
 
-    default List<ParameterNode> visitParametersBlock(ParametersBlockContext ctx) {
-        return this.map(ctx.parameters(), this::visitParameters);
+    default List<ParameterNode> visitParamsBlock(ParamsBlockContext ctx) {
+        return this.map(ctx.params(), this::visitParams);
     }
 
-    default VariateDeclarator visitNamedParameter(NamedParameterContext ctx) {
+    default VariateDeclarator visitNamedParam(NamedParamContext ctx) {
         VariateDeclarator result = new VariateDeclarator();
         this.accept(ctx.identifier(), this::visitIdentifier, result::setName);
         this.accept(ctx.expression(), this::visitExpression, result::setInit);
         return result;
     }
 
-    default List<VariateDeclarator> visitNamedParameters(NamedParametersContext ctx) {
-        return this.map(ctx.namedParameter(), this::visitNamedParameter);
+    default List<VariateDeclarator> visitNamedParams(NamedParamsContext ctx) {
+        return this.map(ctx.namedParam(), this::visitNamedParam);
     }
 
-    default List<VariateDeclarator> visitNamedParametersBlock(NamedParametersBlockContext ctx) {
-        return this.map(ctx.namedParameters(), this::visitNamedParameters);
+    default List<VariateDeclarator> visitNamedParamsBlock(NamedParamsBlockContext ctx) {
+        return this.map(ctx.namedParams(), this::visitNamedParams);
     }
 
     String visitIdentifier(IdentifierContext ctx);
