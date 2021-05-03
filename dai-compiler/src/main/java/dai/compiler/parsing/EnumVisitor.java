@@ -15,15 +15,15 @@ public interface EnumVisitor extends BaseVisitor {
         return result;
     }
 
-    default VariateDeclarator visitEnumFieldDeclarator(EnumFieldDeclaratorContext ctx) {
-        VariateDeclarator result = new VariateDeclarator();
+    default VariableDeclarator visitEnumFieldDeclarator(EnumFieldDeclaratorContext ctx) {
+        VariableDeclarator result = new VariableDeclarator();
         this.accept(ctx.annotated(), this::visitAnnotated, result.getAnnotations()::add);
         this.accept(ctx.identifier(), this::visitIdentifier, result::setName);
         this.accept(ctx.expression(), this::visitExpression, result::setInit);
         return result;
     }
 
-    default List<VariateDeclarator> visitEnumFieldDeclarators(EnumFieldDeclaratorsContext ctx) {
+    default List<VariableDeclarator> visitEnumFieldDeclarators(EnumFieldDeclaratorsContext ctx) {
         return this.map(ctx.enumFieldDeclarator(), this::visitEnumFieldDeclarator);
     }
 

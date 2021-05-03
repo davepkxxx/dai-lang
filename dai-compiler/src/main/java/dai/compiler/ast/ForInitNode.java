@@ -7,6 +7,6 @@ import java.util.List;
 
 @Data
 public class ForInitNode implements AstNode {
-    private VariateDeclaration declaration;
+    private VariableDeclaration declaration;
     private List<Expression> expressions = new ArrayList<>();
 }

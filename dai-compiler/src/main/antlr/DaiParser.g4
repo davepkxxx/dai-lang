@@ -8,7 +8,7 @@ importDeclaration:  IMPORT identifierPath eos;
 
 statement
     : stmt
-    | variateDeclaration
+    | variableDeclaration
     | funcDeclaration
     | enumDeclaration
     | structDeclaration
@@ -35,21 +35,21 @@ stmt
     ;
 
 body:               '{' statement* '}';
-catchBlock:         CATCH '(' variateDeclarator ')' body;
+catchBlock:         CATCH '(' variableDeclarator ')' body;
 condition:          '(' expression ')';
 switchCaseBlock:    switchCaseLabel+ statement+;
 switchCaseLabel:    CASE expression ':' | DEFAULT ':';
 forInit:            forInitDeclaration | expressions;
-forInitDeclaration: annotated* (VAR | CONST) variateDeclarators;
+forInitDeclaration: annotated* (VAR | CONST) variableDeclarators;
 
-variateDeclaration: annotated* (VAR | CONST) variateDeclarators eos;
-variateDeclarators: variateDeclarator (',' variateDeclarator)*;
-variateDeclarator:  identifier (':' useType)? ('=' expression)?;
+variableDeclaration: annotated* (VAR | CONST) variableDeclarators eos;
+variableDeclarators: variableDeclarator (',' variableDeclarator)*;
+variableDeclarator:  identifier (':' useType)? ('=' expression)?;
 
 funcDeclaration:  annotated* FUNC identifier declTypeParamsBlock? funcParamsBlock funcReturn? body;
 funcParamsBlock:  '(' funcParams? ')';
 funcParams:       funcParam (',' funcParam);
-funcParam:        annotated* variateDeclarator;
+funcParam:        annotated* variableDeclarator;
 funcReturn:       ':' (useType | VOID);
 
 enumDeclaration:        annotated* ENUM identifier ('<' useTypeParam '>')? '{' enumFieldDeclarators '}';
@@ -60,7 +60,7 @@ structDeclaration:
     annotated*
     STRUCT identifier declTypeParamsBlock?
     extendsBlock?
-    '{' variateDeclaration* '}';
+    '{' variableDeclaration* '}';
 extendsBlock:     (EXTENDS useType);
 
 classDeclaration:       
@@ -69,7 +69,7 @@ classDeclaration:
     extendsBlock? 
     (IMPLEMENTS implTypes=useTypes)? 
     '{' classMemberDeclaration* '}';
-classMemberDeclaration: variateDeclaration | funcDeclaration | constructorDeclaration;
+classMemberDeclaration: variableDeclaration | funcDeclaration | constructorDeclaration;
 constructorDeclaration: annotated* CONSTRUCTOR funcParamsBlock body;
 
 interfaceDeclaration:
@@ -77,43 +77,52 @@ interfaceDeclaration:
     INTERFACE identifier declTypeParamsBlock?
     extendsBlock?
     '{' interfaceMemberDeclaration* '}';
-interfaceMemberDeclaration: variateDeclaration | funcDeclaration | abstractFuncDeclaration;
+interfaceMemberDeclaration: variableDeclaration | funcDeclaration | abstractFuncDeclaration;
 abstractFuncDeclaration:    annotated* FUNC identifier declTypeParamsBlock? funcParamsBlock funcReturn? eos;
 
-annotationDeclaration:  annotated* ANNOTATION identifier '{' variateDeclaration* '}';
+annotationDeclaration:  annotated* ANNOTATION identifier '{' variableDeclaration* '}';
 annotated:              '@' identifierPath namedParamsBlock?;
 
-expr
-    : '(' expr ')'                                                              #parenthesizedExpression
-    | THIS                                                                      #thisExpression
-    | SUPER                                                                     #superExpression
-    | identifier                                                                #identifierExpression
-    | expr '.' identifier                                                       #chainExpression
-    | object=expr '[' property=expr ']'                                         #memberExpression
-    | expr paramsBlock                                                          #callExpression
-    | NEW annotated* useType paramsBlock                                        #newExpression
-    | expr oper=('++' | '--')                                                   #incrementalExpression
-    | oper=('+' | '-') expr                                                     #unaryExpression
-    | oper=('~' | '!') expr                                                     #notExpression
-    | left=expr oper=('*' | '/' | '%') right=expr                               #multiplicativeExpression
-    | left=expr oper=('+' | '-') right=expr                                     #additiveExpression
-    | left=expr ( leftShiftOper='<' '<' | rightShiftOper='>' '>') right=expr    #shiftExpression
-    | left=expr oper=('>' | '<' | '>=' | '<=') right=expr                       #relationalExpression
-    | left=expr oper=('=' | '!=') right=expr                                    #equalExpression
-    | left=expr oper='&' right=expr                                             #bitwiseAndExpression
-    | left=expr oper='^' right=expr                                             #exclusiveOrExpression
-    | left=expr oper='|' right=expr                                             #bitwiseOrExpression
-    | left=expr oper='&&' right=expr                                            #andExpression
-    | left=expr oper='||' right=expr                                            #orExpression
-    | <assoc=right> test=expr '?' consequent=expr ':' alternate=expr            #conditionalExpression
-    | <assoc=right> identifierPath assignOperator expr                          #assignExpression
-    | (identifier | funcParamsBlock) ARROW (expr | body)                        #lambdaExpression
-    | literal                                                                   #literalExpression
-    | arrayLiteral                                                              #arrayLiteralExpression
-    | objectLiteral                                                             #objectLiteralExpression
+expression
+    : '(' expression ')'                                                                #parenthesizedExpression
+    | THIS                                                                              #thisExpression
+    | SUPER                                                                             #superExpression
+    | identifier                                                                        #identifierExpression
+    | expression '?'? '.' identifier                                                    #chainExpression
+    | object=expression '[' property=expression ']'                                     #memberExpression
+    | expression paramsBlock                                                            #callExpression
+    | NEW annotated* useType paramsBlock                                                #newExpression
+    | expression oper=('++' | '--')                                                     #incrementalExpression
+    | oper=('+' | '-') expression                                                       #unaryExpression
+    | oper=('~' | '!') expression                                                       #notExpression
+    | left=expression oper=('*' | '/' | '%') right=expression                           #multiplicativeExpression
+    | left=expression oper=('+' | '-') right=expression                                 #additiveExpression
+    | left=expression ( leftOper='<' '<' | rightOper='>' '>') right=expression          #shiftExpression
+    | left=expression oper=('>' | '<' | '>=' | '<=') right=expression                   #relationalExpression
+    | left=expression oper=('==' | '!=') right=expression                               #equalExpression
+    | left=expression oper='&' right=expression                                         #bitwiseAndExpression
+    | left=expression oper='^' right=expression                                         #exclusiveOrExpression
+    | left=expression oper='|' right=expression                                         #bitwiseOrExpression
+    | left=expression oper='&&' right=expression                                        #andExpression
+    | left=expression oper='||' right=expression                                        #orExpression
+    | <assoc=right> test=expression '?' consequent=expression ':' alternate=expression  #conditionalExpression
+    | <assoc=right> left=expression oper=
+        ( '='
+        | '+='
+        | '-='
+        | '*='
+        | '/='
+        | '&='
+        | '|='
+        | '^='
+        | '%='
+        | '<<='
+        | '>>='
+        ) right=expression                                                              #assignExpression
+    | (identifier | funcParamsBlock) ARROW (expression | body)                          #lambdaExpression
+    | literal                                                                           #literalExpression
     ;
 
-expression:     expr;
 expressions:    expression (',' expression)*;
 
 param:              expression | namedParam;
@@ -123,33 +132,19 @@ namedParam:         identifier ('=' expression);
 namedParams:        namedParam (',' namedParam)*;
 namedParamsBlock:   '(' namedParams? ')';
 
-assignOperator
-    : '='
-    | '+='
-    | '-='
-    | '*='
-    | '/='
-    | '&='
-    | '|='
-    | '^='
-    | '%='
-    | '<<='
-    | '>>='
-    ;
-
 literal
-    : INTEGER_LITERAL   #integerLiteral
-    | LONG_LITERAL      #longLiteral
-    | FLOAT_LITERAL     #floatLiteral
-    | DOUBLE_LITERAL    #doubleLiteral
-    | CHARACTER_LITERAL #characterLiteral
-    | STRING_LITERAL    #stringLiteral
-    | BOOLEAN_LITERAL   #booleanLiteral
-    | NULL_LITERAL      #nullLiteral
+    : INT_LITERAL               #intLiteral
+    | LONG_LITERAL              #longLiteral
+    | FLOAT_LITERAL             #floatLiteral
+    | DOUBLE_LITERAL            #doubleLiteral
+    | CHAR_LITERAL              #charLiteral
+    | STRING_LITERAL            #stringLiteral
+    | TRUE                      #trueLiteral
+    | FALSE                     #falseLiteral
+    | NULL                      #nullLiteral
+    | '[' expressions? ']'      #arrayLiteral
+    | '{' objectProperty* '}'   #objectLiteral
     ;
-
-arrayLiteral:       '[' expressions? ']';
-objectLiteral:      '{' objectProperty* '}';
 objectProperty:     identifier ':' expression;
 
 identifier:     IDENTIFIER;
@@ -162,9 +157,8 @@ useTypeParam:       useType;
 useTypeParams:      useTypeParam (',' useTypeParam);
 useTypeParamsBlock: '<' useTypeParams '>';
 
-declTypeParam:           identifier declTypeParamExtends?;
+declTypeParam:           identifier (EXTENDS useType)?;
 declTypeParams:          declTypeParam (',' declTypeParam)?;
 declTypeParamsBlock:     '<' declTypeParams '>';
-declTypeParamExtends:    EXTENDS useType;
 
 eos: NL+ | NL* SEMI NL* | EOF;

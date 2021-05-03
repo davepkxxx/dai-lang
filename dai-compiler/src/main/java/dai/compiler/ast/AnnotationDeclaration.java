@@ -9,5 +9,5 @@ import java.util.List;
 public class AnnotationDeclaration implements Statement {
     private String name;
     private List<AnnotatedNode> annotations = new ArrayList<>();
-    private List<VariateDeclaration> fields = new ArrayList<>();
+    private List<VariableDeclaration> fields = new ArrayList<>();
 }

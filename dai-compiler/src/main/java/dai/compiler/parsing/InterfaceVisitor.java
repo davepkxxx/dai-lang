@@ -13,7 +13,7 @@ public interface InterfaceVisitor extends BaseVisitor {
         this.accept(ctx.declTypeParamsBlock(), this::visitDeclTypeParamsBlock, result::setGenericsParameters);
         this.accept(ctx.extendsBlock(), this::visitExtendsBlock, result::setSuperType);
         this.map(ctx.interfaceMemberDeclaration(), this::visitInterfaceMemberDeclaration).forEach(member -> {
-            if (member instanceof VariateDeclaration) result.getFields().add((VariateDeclaration) member);
+            if (member instanceof VariableDeclaration) result.getFields().add((VariableDeclaration) member);
             if (member instanceof FunctionDeclaration) result.getMethods().add((FunctionDeclaration) member);
             if (member instanceof AbstractFunctionDeclaration) result.getAbstractMethods().add((AbstractFunctionDeclaration) member);
         });
@@ -40,7 +40,7 @@ public interface InterfaceVisitor extends BaseVisitor {
 
     List<ClassTypeNode> visitDeclTypeParamsBlock(DeclTypeParamsBlockContext ctx);
 
-    List<VariateDeclarator> visitFuncParamsBlock(FuncParamsBlockContext ctx);
+    List<VariableDeclarator> visitFuncParamsBlock(FuncParamsBlockContext ctx);
 
     ClassTypeNode visitFuncReturn(FuncReturnContext ctx);
 

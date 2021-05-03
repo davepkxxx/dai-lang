@@ -18,16 +18,16 @@ public interface FunctionVisitor extends BaseVisitor {
         return result;
     }
 
-    default List<VariateDeclarator> visitFuncParams(FuncParamsContext ctx) {
+    default List<VariableDeclarator> visitFuncParams(FuncParamsContext ctx) {
         return this.map(ctx.funcParam(), this::visitFuncParam);
     }
 
-    default List<VariateDeclarator> visitFuncParamsBlock(FuncParamsBlockContext ctx) {
+    default List<VariableDeclarator> visitFuncParamsBlock(FuncParamsBlockContext ctx) {
         return this.map(ctx.funcParams(), this::visitFuncParams);
     }
 
-    default VariateDeclarator visitFuncParam(FuncParamContext ctx) {
-        VariateDeclarator result = this.map(ctx.variateDeclarator(), this::visitVariateDeclarator);
+    default VariableDeclarator visitFuncParam(FuncParamContext ctx) {
+        VariableDeclarator result = this.map(ctx.variableDeclarator(), this::visitVariableDeclarator);
         this.accept(ctx.annotated(), this::visitAnnotated, result.getAnnotations()::add);
         return result;
     }
@@ -44,7 +44,7 @@ public interface FunctionVisitor extends BaseVisitor {
 
     List<ClassTypeNode> visitDeclTypeParamsBlock(DeclTypeParamsBlockContext ctx);
 
-    VariateDeclarator visitVariateDeclarator(VariateDeclaratorContext ctx);
+    VariableDeclarator visitVariableDeclarator(VariableDeclaratorContext ctx);
 
     ClassTypeNode visitUseType(UseTypeContext ctx);
 

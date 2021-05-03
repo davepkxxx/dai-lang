@@ -11,5 +11,5 @@ public class StructDeclaration implements Statement {
     private List<AnnotatedNode> annotations = new ArrayList<>();
     private List<ClassTypeNode> genericsParameters = new ArrayList<>();
     private ClassTypeNode superType;
-    private List<VariateDeclaration> fields = new ArrayList<>();
+    private List<VariableDeclaration> fields = new ArrayList<>();
 }

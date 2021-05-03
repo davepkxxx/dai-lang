@@ -8,5 +8,5 @@ import java.util.List;
 @Data
 public class AnnotatedNode implements AstNode {
     private String name;
-    private List<VariateDeclarator> parameters = new ArrayList<>();
+    private List<VariableDeclarator> parameters = new ArrayList<>();
 }

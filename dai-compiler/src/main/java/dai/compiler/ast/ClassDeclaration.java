@@ -12,7 +12,7 @@ public class ClassDeclaration implements Statement {
     private List<ClassTypeNode> genericsParameters = new ArrayList<>();
     private ClassTypeNode superType;
     private List<ClassTypeNode> interfaces = new ArrayList<>();
-    private List<VariateDeclaration> fields = new ArrayList<>();
+    private List<VariableDeclaration> fields = new ArrayList<>();
     private List<ConstructorDeclaration> constructors = new ArrayList<>();
     private List<FunctionDeclaration> methods = new ArrayList<>();
 }

@@ -4,7 +4,7 @@ import dai.compiler.antlr.DaiParser.*;
 import dai.compiler.ast.AnnotatedNode;
 import dai.compiler.ast.ClassTypeNode;
 import dai.compiler.ast.StructDeclaration;
-import dai.compiler.ast.VariateDeclaration;
+import dai.compiler.ast.VariableDeclaration;
 
 import java.util.List;
 
@@ -15,7 +15,7 @@ public interface StructVisitor extends BaseVisitor {
         this.accept(ctx.annotated(), this::visitAnnotated, result.getAnnotations()::add);
         this.accept(ctx.declTypeParamsBlock(), this::visitDeclTypeParamsBlock, result::setGenericsParameters);
         this.accept(ctx.extendsBlock(), this::visitExtendsBlock, result::setSuperType);
-        this.accept(ctx.variateDeclaration(), this::visitVariateDeclaration, result.getFields()::add);
+        this.accept(ctx.variableDeclaration(), this::visitVariableDeclaration, result.getFields()::add);
         return result;
     }
 
@@ -29,7 +29,7 @@ public interface StructVisitor extends BaseVisitor {
 
     String visitIdentifier(IdentifierContext ctx);
 
-    VariateDeclaration visitVariateDeclaration(VariateDeclarationContext ctx);
+    VariableDeclaration visitVariableDeclaration(VariableDeclarationContext ctx);
 
     List<ClassTypeNode> visitDeclTypeParamsBlock(DeclTypeParamsBlockContext ctx);
 }

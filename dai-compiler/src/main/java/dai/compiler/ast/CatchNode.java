@@ -7,6 +7,6 @@ import java.util.List;
 
 @Data
 public class CatchNode implements AstNode {
-    private VariateDeclarator parameter;
+    private VariableDeclarator parameter;
     private List<Statement> body = new ArrayList<>();
 }

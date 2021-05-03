@@ -10,7 +10,8 @@ public class ParserVisitor extends BaseParserVisitor<Object> implements
         ClassTypeVisitor,
         StatementVisitor,
         ExpressionVisitor,
-        VariateVisitor,
+        LiteralVisitor,
+        VariableVisitor,
         FunctionVisitor,
         EnumVisitor,
         StructVisitor,
@@ -118,7 +119,7 @@ public class ParserVisitor extends BaseParserVisitor<Object> implements
     }
 
     @Override
-    public VariateDeclaration visitForInitDeclaration(ForInitDeclarationContext ctx) {
+    public VariableDeclaration visitForInitDeclaration(ForInitDeclarationContext ctx) {
         return StatementVisitor.super.visitForInitDeclaration(ctx);
     }
 
@@ -128,12 +129,12 @@ public class ParserVisitor extends BaseParserVisitor<Object> implements
     }
 
     @Override
-    public BreakStatement visitContinueStatement(ContinueStatementContext ctx) {
+    public ContinueStatement visitContinueStatement(ContinueStatementContext ctx) {
         return StatementVisitor.super.visitContinueStatement(ctx);
     }
 
     @Override
-    public ContinueStatement visitBreakStatement(BreakStatementContext ctx) {
+    public BreakStatement visitBreakStatement(BreakStatementContext ctx) {
         return StatementVisitor.super.visitBreakStatement(ctx);
     }
 
@@ -145,6 +146,11 @@ public class ParserVisitor extends BaseParserVisitor<Object> implements
     @Override
     public ExpressionStatement visitExpressionStatement(ExpressionStatementContext ctx) {
         return StatementVisitor.super.visitExpressionStatement(ctx);
+    }
+
+    @Override
+    public EmptyStatement visitEmptyStatement(EmptyStatementContext ctx) {
+        return StatementVisitor.super.visitEmptyStatement(ctx);
     }
 
     /* identifier */
@@ -203,26 +209,21 @@ public class ParserVisitor extends BaseParserVisitor<Object> implements
         return ClassTypeVisitor.super.visitDeclTypeParamsBlock(ctx);
     }
 
-    @Override
-    public ClassTypeNode visitDeclTypeParamExtends(DeclTypeParamExtendsContext ctx) {
-        return ClassTypeVisitor.super.visitDeclTypeParamExtends(ctx);
-    }
-
-    /* variate */
+    /* variable */
 
     @Override
-    public VariateDeclaration visitVariateDeclaration(VariateDeclarationContext ctx) {
-        return VariateVisitor.super.visitVariateDeclaration(ctx);
+    public VariableDeclaration visitVariableDeclaration(VariableDeclarationContext ctx) {
+        return VariableVisitor.super.visitVariableDeclaration(ctx);
     }
 
     @Override
-    public List<VariateDeclarator> visitVariateDeclarators(VariateDeclaratorsContext ctx) {
-        return VariateVisitor.super.visitVariateDeclarators(ctx);
+    public List<VariableDeclarator> visitVariableDeclarators(VariableDeclaratorsContext ctx) {
+        return VariableVisitor.super.visitVariableDeclarators(ctx);
     }
 
     @Override
-    public VariateDeclarator visitVariateDeclarator(VariateDeclaratorContext ctx) {
-        return VariateVisitor.super.visitVariateDeclarator(ctx);
+    public VariableDeclarator visitVariableDeclarator(VariableDeclaratorContext ctx) {
+        return VariableVisitor.super.visitVariableDeclarator(ctx);
     }
 
     /* function */
@@ -233,17 +234,17 @@ public class ParserVisitor extends BaseParserVisitor<Object> implements
     }
 
     @Override
-    public List<VariateDeclarator> visitFuncParams(FuncParamsContext ctx) {
+    public List<VariableDeclarator> visitFuncParams(FuncParamsContext ctx) {
         return FunctionVisitor.super.visitFuncParams(ctx);
     }
 
     @Override
-    public List<VariateDeclarator> visitFuncParamsBlock(FuncParamsBlockContext ctx) {
+    public List<VariableDeclarator> visitFuncParamsBlock(FuncParamsBlockContext ctx) {
         return FunctionVisitor.super.visitFuncParamsBlock(ctx);
     }
 
     @Override
-    public VariateDeclarator visitFuncParam(FuncParamContext ctx) {
+    public VariableDeclarator visitFuncParam(FuncParamContext ctx) {
         return FunctionVisitor.super.visitFuncParam(ctx);
     }
 
@@ -260,12 +261,12 @@ public class ParserVisitor extends BaseParserVisitor<Object> implements
     }
 
     @Override
-    public VariateDeclarator visitEnumFieldDeclarator(EnumFieldDeclaratorContext ctx) {
+    public VariableDeclarator visitEnumFieldDeclarator(EnumFieldDeclaratorContext ctx) {
         return EnumVisitor.super.visitEnumFieldDeclarator(ctx);
     }
 
     @Override
-    public List<VariateDeclarator> visitEnumFieldDeclarators(EnumFieldDeclaratorsContext ctx) {
+    public List<VariableDeclarator> visitEnumFieldDeclarators(EnumFieldDeclaratorsContext ctx) {
         return EnumVisitor.super.visitEnumFieldDeclarators(ctx);
     }
 
@@ -354,6 +355,178 @@ public class ParserVisitor extends BaseParserVisitor<Object> implements
         return ExpressionVisitor.super.visitIdentifierExpression(ctx);
     }
 
+    @Override
+    public MemberExpression visitMemberExpression(MemberExpressionContext ctx) {
+        return ExpressionVisitor.super.visitMemberExpression(ctx);
+    }
+
+    @Override
+    public ChainExpression visitChainExpression(ChainExpressionContext ctx) {
+        return ExpressionVisitor.super.visitChainExpression(ctx);
+    }
+
+    @Override
+    public NewExpression visitNewExpression(NewExpressionContext ctx) {
+        return ExpressionVisitor.super.visitNewExpression(ctx);
+    }
+
+    @Override
+    public CallExpression visitCallExpression(CallExpressionContext ctx) {
+        return ExpressionVisitor.super.visitCallExpression(ctx);
+    }
+
+    @Override
+    public UnaryExpression visitIncrementalExpression(IncrementalExpressionContext ctx) {
+        return ExpressionVisitor.super.visitIncrementalExpression(ctx);
+    }
+
+    @Override
+    public UnaryExpression visitNotExpression(NotExpressionContext ctx) {
+        return ExpressionVisitor.super.visitNotExpression(ctx);
+    }
+
+    @Override
+    public UnaryExpression visitUnaryExpression(UnaryExpressionContext ctx) {
+        return ExpressionVisitor.super.visitUnaryExpression(ctx);
+    }
+
+    @Override
+    public BinaryExpression visitAdditiveExpression(AdditiveExpressionContext ctx) {
+        return ExpressionVisitor.super.visitAdditiveExpression(ctx);
+    }
+
+    @Override
+    public BinaryExpression visitAndExpression(AndExpressionContext ctx) {
+        return ExpressionVisitor.super.visitAndExpression(ctx);
+    }
+
+    @Override
+    public BinaryExpression visitBitwiseAndExpression(BitwiseAndExpressionContext ctx) {
+        return ExpressionVisitor.super.visitBitwiseAndExpression(ctx);
+    }
+
+    @Override
+    public BinaryExpression visitEqualExpression(EqualExpressionContext ctx) {
+        return ExpressionVisitor.super.visitEqualExpression(ctx);
+    }
+
+    @Override
+    public BinaryExpression visitShiftExpression(ShiftExpressionContext ctx) {
+        return ExpressionVisitor.super.visitShiftExpression(ctx);
+    }
+
+    @Override
+    public BinaryExpression visitMultiplicativeExpression(MultiplicativeExpressionContext ctx) {
+        return ExpressionVisitor.super.visitMultiplicativeExpression(ctx);
+    }
+
+    @Override
+    public BinaryExpression visitOrExpression(OrExpressionContext ctx) {
+        return ExpressionVisitor.super.visitOrExpression(ctx);
+    }
+
+    @Override
+    public BinaryExpression visitBitwiseOrExpression(BitwiseOrExpressionContext ctx) {
+        return ExpressionVisitor.super.visitBitwiseOrExpression(ctx);
+    }
+
+    @Override
+    public BinaryExpression visitExclusiveOrExpression(ExclusiveOrExpressionContext ctx) {
+        return ExpressionVisitor.super.visitExclusiveOrExpression(ctx);
+    }
+
+    @Override
+    public BinaryExpression visitRelationalExpression(RelationalExpressionContext ctx) {
+        return ExpressionVisitor.super.visitRelationalExpression(ctx);
+    }
+
+    @Override
+    public ConditionalExpression visitConditionalExpression(ConditionalExpressionContext ctx) {
+        return ExpressionVisitor.super.visitConditionalExpression(ctx);
+    }
+
+    @Override
+    public AssignmentExpression visitAssignExpression(AssignExpressionContext ctx) {
+        return ExpressionVisitor.super.visitAssignExpression(ctx);
+    }
+
+    @Override
+    public LambdaExpression visitLambdaExpression(LambdaExpressionContext ctx) {
+        return ExpressionVisitor.super.visitLambdaExpression(ctx);
+    }
+
+    @Override
+    public Expression visitParenthesizedExpression(ParenthesizedExpressionContext ctx) {
+        return ExpressionVisitor.super.visitParenthesizedExpression(ctx);
+    }
+
+    /* literal */
+
+    @Override
+    public LiteralExpression visitLiteralExpression(LiteralExpressionContext ctx) {
+        return LiteralVisitor.super.visitLiteralExpression(ctx);
+    }
+
+    @Override
+    public IntegerLiteral visitIntLiteral(IntLiteralContext ctx) {
+        return LiteralVisitor.super.visitIntLiteral(ctx);
+    }
+
+    @Override
+    public LongLiteral visitLongLiteral(LongLiteralContext ctx) {
+        return LiteralVisitor.super.visitLongLiteral(ctx);
+    }
+
+    @Override
+    public FloatLiteral visitFloatLiteral(FloatLiteralContext ctx) {
+        return LiteralVisitor.super.visitFloatLiteral(ctx);
+    }
+
+    @Override
+    public DoubleLiteral visitDoubleLiteral(DoubleLiteralContext ctx) {
+        return LiteralVisitor.super.visitDoubleLiteral(ctx);
+    }
+
+    @Override
+    public CharacterLiteral visitCharLiteral(CharLiteralContext ctx) {
+        return LiteralVisitor.super.visitCharLiteral(ctx);
+    }
+
+    @Override
+    public StringLiteral visitStringLiteral(StringLiteralContext ctx) {
+        return LiteralVisitor.super.visitStringLiteral(ctx);
+    }
+
+    @Override
+    public FalseLiteral visitFalseLiteral(FalseLiteralContext ctx) {
+        return LiteralVisitor.super.visitFalseLiteral(ctx);
+    }
+
+    @Override
+    public TrueLiteral visitTrueLiteral(TrueLiteralContext ctx) {
+        return LiteralVisitor.super.visitTrueLiteral(ctx);
+    }
+
+    @Override
+    public NullLiteral visitNullLiteral(NullLiteralContext ctx) {
+        return LiteralVisitor.super.visitNullLiteral(ctx);
+    }
+
+    @Override
+    public ArrayLiteral visitArrayLiteral(ArrayLiteralContext ctx) {
+        return LiteralVisitor.super.visitArrayLiteral(ctx);
+    }
+
+    @Override
+    public ObjectLiteral visitObjectLiteral(ObjectLiteralContext ctx) {
+        return LiteralVisitor.super.visitObjectLiteral(ctx);
+    }
+
+    @Override
+    public ObjectPropertyNode visitObjectProperty(ObjectPropertyContext ctx) {
+        return LiteralVisitor.super.visitObjectProperty(ctx);
+    }
+
     /* parameter */
 
     @Override
@@ -372,17 +545,17 @@ public class ParserVisitor extends BaseParserVisitor<Object> implements
     }
 
     @Override
-    public VariateDeclarator visitNamedParam(NamedParamContext ctx) {
+    public VariableDeclarator visitNamedParam(NamedParamContext ctx) {
         return ParameterVisitor.super.visitNamedParam(ctx);
     }
 
     @Override
-    public List<VariateDeclarator> visitNamedParams(NamedParamsContext ctx) {
+    public List<VariableDeclarator> visitNamedParams(NamedParamsContext ctx) {
         return ParameterVisitor.super.visitNamedParams(ctx);
     }
 
     @Override
-    public List<VariateDeclarator> visitNamedParamsBlock(NamedParamsBlockContext ctx) {
+    public List<VariableDeclarator> visitNamedParamsBlock(NamedParamsBlockContext ctx) {
         return ParameterVisitor.super.visitNamedParamsBlock(ctx);
     }
 }

@@ -35,12 +35,8 @@ public interface ClassTypeVisitor extends BaseVisitor {
     default ClassTypeNode visitDeclTypeParam(DeclTypeParamContext ctx) {
         ClassTypeNode result = new ClassTypeNode();
         this.accept(ctx.identifier(), this::visitIdentifier, result::setName);
-        this.accept(ctx.declTypeParamExtends(), this::visitDeclTypeParamExtends, result::setSuperType);
+        this.accept(ctx.useType(), this::visitUseType, result::setSuperType);
         return result;
-    }
-
-    default ClassTypeNode visitDeclTypeParamExtends(DeclTypeParamExtendsContext ctx) {
-        return this.map(ctx.useType(), this::visitUseType);
     }
 
     default List<ClassTypeNode> visitDeclTypeParamsBlock(DeclTypeParamsBlockContext ctx) {

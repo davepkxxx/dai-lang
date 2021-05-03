@@ -10,7 +10,7 @@ public interface AnnotationVisitor extends BaseVisitor {
         AnnotationDeclaration result = new AnnotationDeclaration();
         this.accept(ctx.identifier(), this::visitIdentifier, result::setName);
         this.accept(ctx.annotated(), this::visitAnnotated, result.getAnnotations()::add);
-        this.accept(ctx.variateDeclaration(), this::visitVariateDeclaration, result.getFields()::add);
+        this.accept(ctx.variableDeclaration(), this::visitVariableDeclaration, result.getFields()::add);
         return result;
     }
 
@@ -25,7 +25,7 @@ public interface AnnotationVisitor extends BaseVisitor {
 
     String visitIdentifierPath(IdentifierPathContext ctx);
 
-    VariateDeclaration visitVariateDeclaration(VariateDeclarationContext ctx);
+    VariableDeclaration visitVariableDeclaration(VariableDeclarationContext ctx);
 
-    List<VariateDeclarator> visitNamedParamsBlock(NamedParamsBlockContext ctx);
+    List<VariableDeclarator> visitNamedParamsBlock(NamedParamsBlockContext ctx);
 }

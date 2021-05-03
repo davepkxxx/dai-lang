@@ -14,7 +14,7 @@ public interface ClassVisitor extends BaseVisitor {
         this.accept(ctx.extendsBlock(), this::visitExtendsBlock, result::setSuperType);
         this.accept(ctx.implTypes, this::visitUseTypes, result::setInterfaces);
         this.map(ctx.classMemberDeclaration(), this::visitClassMemberDeclaration).forEach(member -> {
-            if (member instanceof VariateDeclaration) result.getFields().add((VariateDeclaration) member);
+            if (member instanceof VariableDeclaration) result.getFields().add((VariableDeclaration) member);
             if (member instanceof ConstructorDeclaration) result.getConstructors().add((ConstructorDeclaration) member);
             if (member instanceof FunctionDeclaration) result.getMethods().add((FunctionDeclaration) member);
         });
@@ -43,7 +43,7 @@ public interface ClassVisitor extends BaseVisitor {
 
     List<ClassTypeNode> visitDeclTypeParamsBlock(DeclTypeParamsBlockContext ctx);
 
-    List<VariateDeclarator> visitFuncParamsBlock(FuncParamsBlockContext ctx);
+    List<VariableDeclarator> visitFuncParamsBlock(FuncParamsBlockContext ctx);
 
     List<Statement> visitBody(BodyContext ctx);
 }

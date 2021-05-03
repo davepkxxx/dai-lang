@@ -2,6 +2,7 @@ package dai.compiler.parsing;
 
 import dai.compiler.antlr.DaiParser.*;
 import dai.compiler.ast.*;
+import dai.compiler.ast.VariableDeclaration.VariableKind;
 
 import java.util.List;
 
@@ -15,12 +16,14 @@ public interface StatementVisitor extends BaseVisitor {
     }
 
     default PackageDeclaration visitPackageDeclaration(PackageDeclarationContext ctx) {
+        if (ctx.PACKAGE() == null) return null;
         PackageDeclaration result = new PackageDeclaration();
         this.accept(ctx.identifierPath(), this::visitIdentifierPath, result::setName);
         return result;
     }
 
     default ImportDeclaration visitImportDeclaration(ImportDeclarationContext ctx) {
+        if (ctx.IMPORT() == null) return null;
         ImportDeclaration result = new ImportDeclaration();
         this.accept(ctx.identifierPath(), this::visitIdentifierPath, result::setName);
         return result;
@@ -52,7 +55,7 @@ public interface StatementVisitor extends BaseVisitor {
 
     default CatchNode visitCatchBlock(CatchBlockContext ctx) {
         CatchNode result = new CatchNode();
-        this.accept(ctx.variateDeclarator(), this::visitVariateDeclarator, result::setParameter);
+        this.accept(ctx.variableDeclarator(), this::visitVariableDeclarator, result::setParameter);
         this.accept(ctx.body(), this::visitBody, result::setBody);
         return result;
     }
@@ -128,11 +131,11 @@ public interface StatementVisitor extends BaseVisitor {
         return result;
     }
 
-    default VariateDeclaration visitForInitDeclaration(ForInitDeclarationContext ctx) {
-        VariateDeclaration result = new VariateDeclaration();
-        if (ctx.VAR() != null) result.setVariateKind(VariateDeclaration.VAR);
-        if (ctx.CONST() != null) result.setVariateKind(VariateDeclaration.CONST);
-        this.accept(ctx.variateDeclarators(), this::visitVariateDeclarators, result::setDeclarators);
+    default VariableDeclaration visitForInitDeclaration(ForInitDeclarationContext ctx) {
+        VariableDeclaration result = new VariableDeclaration();
+        if (ctx.VAR() != null) result.setVariableKind(VariableKind.VAR);
+        if (ctx.CONST() != null) result.setVariableKind(VariableKind.CONST);
+        this.accept(ctx.variableDeclarators(), this::visitVariableDeclarators, result::setDeclarators);
         return result;
     }
 
@@ -149,12 +152,14 @@ public interface StatementVisitor extends BaseVisitor {
 
     /* continue & break & return */
 
-    default BreakStatement visitContinueStatement(ContinueStatementContext ctx) {
-        return new BreakStatement();
+    default ContinueStatement visitContinueStatement(ContinueStatementContext ctx) {
+        if (ctx.CONTINUE() == null) return null;
+        return new ContinueStatement();
     }
 
-    default ContinueStatement visitBreakStatement(BreakStatementContext ctx) {
-        return new ContinueStatement();
+    default BreakStatement visitBreakStatement(BreakStatementContext ctx) {
+        if (ctx.BREAK() == null) return null;
+        return new BreakStatement();
     }
 
     default ReturnStatement visitReturnStatement(ReturnStatementContext ctx) {
@@ -171,9 +176,16 @@ public interface StatementVisitor extends BaseVisitor {
         return result;
     }
 
-    List<VariateDeclarator> visitVariateDeclarators(VariateDeclaratorsContext ctx);
+    /* empty */
 
-    VariateDeclarator visitVariateDeclarator(VariateDeclaratorContext ctx);
+    default EmptyStatement visitEmptyStatement(EmptyStatementContext ctx) {
+        if (ctx.SEMI() == null) return null;
+        return new EmptyStatement();
+    }
+
+    List<VariableDeclarator> visitVariableDeclarators(VariableDeclaratorsContext ctx);
+
+    VariableDeclarator visitVariableDeclarator(VariableDeclaratorContext ctx);
 
     String visitIdentifierPath(IdentifierPathContext ctx);
 

@@ -49,18 +49,16 @@ IMPLEMENTS:     'IMPLEMENTS';
 ANNOTATION:     'ANNOTATION';
 
 // Literals
-INTEGER_LITERAL:    [0-9]+;
-LONG_LITERAL:       [0-9]+ [l];
-FLOAT_LITERAL:      [0-9]+ DOT [0-0]+ [f];
-DOUBLE_LITERAL:     [0-9]+ DOT [0-0]+;
-CHARACTER_LITERAL:  '\'' (~['\\\r\n] | EscapeSequence) '\'';
-STRING_LITERAL:     '"' (~["\\\r\n] | EscapeSequence)* '"';
-BOOLEAN_LITERAL:    TRUE | FALSE;
-NULL_LITERAL:       NULL;
+INT_LITERAL:    [0-9]+;
+LONG_LITERAL:   [0-9]+ [l];
+FLOAT_LITERAL:  [0-9]+ DOT [0-0]+ [f];
+DOUBLE_LITERAL: [0-9]+ DOT [0-0]+;
+CHAR_LITERAL:   '\'' (~['\\\r\n] | EscapeSequence) '\'';
+STRING_LITERAL: '"' (~["\\\r\n] | EscapeSequence)* '"';
 
 // operators
-NOT:                    '!';
-TILDE:                  '~';
+LOGICAL_NOT:            '!';
+BITWISE_NOT:            '~';
 QUESTION:               '?';
 EQUALITY:               '==';
 INEQUALITY:             '!=';
@@ -68,8 +66,8 @@ GREATER_THAN:           '>';
 LESS_THAN:              '<';
 LESS_THAN_OR_EQUAL:     '<=';
 GREATER_THAN_OR_EQUAL:  '>=';
-AND:                    '&&';
-OR:                     '||';
+LOGICAL_AND:            '&&';
+LOGICAL_OR:             '||';
 INCREMENT:              '++';
 DECREMENT:              '--';
 ADDITION:               '+';

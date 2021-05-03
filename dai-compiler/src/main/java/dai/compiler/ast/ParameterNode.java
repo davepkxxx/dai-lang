@@ -5,5 +5,5 @@ import lombok.Data;
 @Data
 public class ParameterNode implements AstNode {
     private Expression expression;
-    private VariateDeclarator namedParameter;
+    private VariableDeclarator namedParameter;
 }

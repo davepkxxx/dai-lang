@@ -22,18 +22,18 @@ public interface ParameterVisitor extends BaseVisitor {
         return this.map(ctx.params(), this::visitParams);
     }
 
-    default VariateDeclarator visitNamedParam(NamedParamContext ctx) {
-        VariateDeclarator result = new VariateDeclarator();
+    default VariableDeclarator visitNamedParam(NamedParamContext ctx) {
+        VariableDeclarator result = new VariableDeclarator();
         this.accept(ctx.identifier(), this::visitIdentifier, result::setName);
         this.accept(ctx.expression(), this::visitExpression, result::setInit);
         return result;
     }
 
-    default List<VariateDeclarator> visitNamedParams(NamedParamsContext ctx) {
+    default List<VariableDeclarator> visitNamedParams(NamedParamsContext ctx) {
         return this.map(ctx.namedParam(), this::visitNamedParam);
     }
 
-    default List<VariateDeclarator> visitNamedParamsBlock(NamedParamsBlockContext ctx) {
+    default List<VariableDeclarator> visitNamedParamsBlock(NamedParamsBlockContext ctx) {
         return this.map(ctx.namedParams(), this::visitNamedParams);
     }
 
